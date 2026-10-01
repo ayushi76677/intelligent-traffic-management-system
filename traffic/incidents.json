@@ -1,0 +1,89 @@
+{
+  "version": "1.0",
+  "incidents": [
+    {
+      "incident_id": "INC-0124",
+      "type": "ACCIDENT",
+      "title": "Road Obstruction",
+      "road": "Arterial Road",
+      "city": "India",
+      "latitude": 13.181002725344095,
+      "longitude": 78.39021581841858,
+      "severity": "HIGH",
+      "description": "Vehicle collision reported.",
+      "status": "ACTIVE",
+      "reported_at": "2026-09-13T20:30:00+05:30",
+      "impact_radius_meters": 150
+    },
+    {
+      "incident_id": "INC-TEST",
+      "type": "ACCIDENT",
+      "title": "Test Incident",
+      "road": "AB Road",
+      "city": "Indore",
+      "latitude": 22.7533,
+      "longitude": 75.8937,
+      "severity": "HIGH",
+      "description": "Minor collision",
+      "status": "ACTIVE",
+      "reported_at": "2026-09-13T20:30:00+05:30",
+      "impact_radius_meters": 150
+    },
+    {
+      "incident_id": "INC-IND-2026-001",
+      "type": "ACCIDENT",
+      "title": "Two-Vehicle Collision near Approach Median",
+      "road": "AB Road Corridor",
+      "city": "Indore",
+      "latitude": 22.7512,
+      "longitude": 75.8924,
+      "severity": "HIGH",
+      "description": "Minor side-impact between private car and auto-rickshaw occupying leftmost lane. Traffic slowing down.",
+      "status": "ACTIVE",
+      "reported_at": "2026-09-13T19:42:00+05:30",
+      "impact_radius_meters": 150
+    },
+    {
+      "incident_id": "INC-IND-2026-002",
+      "type": "CONSTRUCTION",
+      "title": "Metro Viaduct Pillar Maintenance Work",
+      "road": "Palasia Square / AB Road Corridor",
+      "city": "Indore",
+      "latitude": 22.7265,
+      "longitude": 75.8855,
+      "severity": "MEDIUM",
+      "description": "Right-hand transit lane blocked with safety barricades for maintenance inspection.",
+      "status": "ACTIVE",
+      "reported_at": "2026-09-13T18:00:00+05:30",
+      "impact_radius_meters": 200
+    },
+    {
+      "incident_id": "INC-IND-2026-003",
+      "type": "WATERLOGGING",
+      "title": "Underpass Water Accumulation",
+      "road": "Hamidia Road Underbridge",
+      "city": "Bhopal",
+      "latitude": 23.2612,
+      "longitude": 77.4045,
+      "severity": "CRITICAL",
+      "description": "Waterlogging 0.4m deep following seasonal downpour. Diversions enacted towards Link Road 1.",
+      "status": "INVESTIGATING",
+      "reported_at": "2026-09-13T20:10:00+05:30",
+      "impact_radius_meters": 350
+    },
+    {
+      "incident_id": "INC-IND-2026-004",
+      "type": "BREAKDOWN",
+      "title": "Heavy Goods Carrier Axle Failure",
+      "road": "Outer Ring Road - Silk Board Ramp",
+      "city": "Bengaluru",
+      "latitude": 12.9168,
+      "longitude": 77.6231,
+      "severity": "HIGH",
+      "description": "Multi-axle container vehicle stalled at exit ramp causing heavy upstream congestion.",
+      "status": "ACTIVE",
+      "reported_at": "2026-09-13T19:15:00+05:30",
+      "impact_radius_meters": 400
+    }
+  ]
+}

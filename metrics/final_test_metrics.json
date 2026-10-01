@@ -1,0 +1,198 @@
+{
+  "target_congestion_level": {
+    "type": "multiclass",
+    "accuracy": 0.6565267616480555,
+    "precision_macro": 0.5330414703516656,
+    "recall_macro": 0.5025410536708267,
+    "f1_macro": 0.5128597526487492,
+    "f1_weighted": 0.6398871934268681,
+    "confusion_matrix": [
+      [
+        103,
+        37,
+        287
+      ],
+      [
+        127,
+        229,
+        184
+      ],
+      [
+        103,
+        154,
+        1373
+      ]
+    ]
+  },
+  "target_congestion_score": {
+    "type": "regression",
+    "mae": 28.109228134155273,
+    "mse": 1153.4293212890625,
+    "rmse": 33.96217486099885,
+    "r2": -0.01306295394897461,
+    "mape_pct": 82.93923950195312
+  },
+  "target_risk_level": {
+    "type": "multiclass",
+    "accuracy": 0.6873315363881402,
+    "precision_macro": 0.5061932814979505,
+    "recall_macro": 0.5555680062122733,
+    "f1_macro": 0.5151046232043613,
+    "f1_weighted": 0.6858142293760425,
+    "confusion_matrix": [
+      [
+        1328,
+        129,
+        335
+      ],
+      [
+        163,
+        31,
+        89
+      ],
+      [
+        70,
+        26,
+        426
+      ]
+    ]
+  },
+  "target_is_approaching": {
+    "type": "binary",
+    "accuracy": 0.7562572198690797,
+    "precision_macro": 0.7182393617789898,
+    "recall_macro": 0.7303304541925466,
+    "f1_macro": 0.7231560094678263,
+    "f1_weighted": 0.7595378520803397,
+    "confusion_matrix": [
+      [
+        1431,
+        361
+      ],
+      [
+        272,
+        533
+      ]
+    ],
+    "roc_auc": 0.826459211401952
+  },
+  "target_approach_score": {
+    "type": "regression",
+    "mae": 20.654905319213867,
+    "mse": 740.937744140625,
+    "rmse": 27.220171640543064,
+    "r2": 0.08395141363143921
+  },
+  "target_motion_state": {
+    "type": "multiclass",
+    "accuracy": 0.9576434347323836,
+    "precision_macro": 0.7321620768512878,
+    "recall_macro": 0.7470835850196316,
+    "f1_macro": 0.7352727998522256,
+    "f1_weighted": 0.9598003137592646,
+    "confusion_matrix": [
+      [
+        986,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        551,
+        43,
+        8
+      ],
+      [
+        0,
+        40,
+        949,
+        12
+      ],
+      [
+        0,
+        2,
+        5,
+        1
+      ]
+    ]
+  },
+  "target_maneuver_type": {
+    "type": "multiclass",
+    "accuracy": 0.9799768964189449,
+    "precision_macro": 0.9461522298759952,
+    "recall_macro": 0.9765614445158081,
+    "f1_macro": 0.9598300523483005,
+    "f1_weighted": 0.9804431811829454,
+    "confusion_matrix": [
+      [
+        986,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        179,
+        0,
+        3
+      ],
+      [
+        0,
+        2,
+        172,
+        6
+      ],
+      [
+        0,
+        33,
+        8,
+        1208
+      ]
+    ]
+  },
+  "target_has_infraction": {
+    "type": "binary",
+    "accuracy": 0.9707354639969196,
+    "precision_macro": 0.9134694795235329,
+    "recall_macro": 0.9757989113032342,
+    "f1_macro": 0.9413017979543719,
+    "f1_weighted": 0.9717598003899175,
+    "confusion_matrix": [
+      [
+        2180,
+        70
+      ],
+      [
+        6,
+        341
+      ]
+    ],
+    "roc_auc": 0.9967813000320206
+  },
+  "target_infraction_type": {
+    "type": "multiclass",
+    "accuracy": 0.9445514054678475,
+    "precision_macro": 0.8535460394329907,
+    "recall_macro": 0.9667813000320205,
+    "f1_macro": 0.8973542580218747,
+    "f1_weighted": 0.9483571947565063,
+    "confusion_matrix": [
+      [
+        2107,
+        143
+      ],
+      [
+        1,
+        346
+      ]
+    ]
+  },
+  "aux_next_displacement": {
+    "type": "regression",
+    "mae": 1.4499094486236572,
+    "mse": 51.56001281738281,
+    "rmse": 7.18053012091606,
+    "r2": 0.12540081143379211
+  }
+}

@@ -1,0 +1,213 @@
+{
+  "phase": "Phase 5: Pre-Training Project Audit & Architecture Preparation",
+  "audit_timestamp": "2026-09-29T23:18:00+05:30",
+  "dataset_paths": {
+    "sequences": {
+      "train": "data/hybrid_traffic/sequences/train_sequences.npz",
+      "val": "data/hybrid_traffic/sequences/val_sequences.npz",
+      "test": "data/hybrid_traffic/sequences/test_sequences.npz",
+      "all": "data/hybrid_traffic/sequences/all_sequences.npz",
+      "metadata": "data/hybrid_traffic/sequences/sequence_metadata.json"
+    },
+    "labels": {
+      "train_npz": "data/hybrid_traffic/labels/train_labels.npz",
+      "train_csv": "data/hybrid_traffic/labels/train_labels.csv",
+      "val_npz": "data/hybrid_traffic/labels/val_labels.npz",
+      "val_csv": "data/hybrid_traffic/labels/val_labels.csv",
+      "test_npz": "data/hybrid_traffic/labels/test_labels.npz",
+      "test_csv": "data/hybrid_traffic/labels/test_labels.csv",
+      "all_npz": "data/hybrid_traffic/labels/all_labels.npz",
+      "all_csv": "data/hybrid_traffic/labels/all_labels.csv",
+      "metadata": "data/hybrid_traffic/labels/label_metadata.json"
+    },
+    "features_source": "data/hybrid_traffic/processed_features.csv",
+    "approaching_risk_source": "approaching_vehicle_analysis.csv"
+  },
+  "tensor_shapes": {
+    "train_X": [12414, 20, 20],
+    "val_X": [2790, 20, 20],
+    "test_X": [2597, 20, 20],
+    "all_X": [17801, 20, 20],
+    "input_dtype": "float32",
+    "sequence_length": 20,
+    "num_features": 20,
+    "total_sequences": 17801,
+    "split_distribution": {
+      "train_sequences": 12414,
+      "train_pct": 69.74,
+      "val_sequences": 2790,
+      "val_pct": 15.67,
+      "test_sequences": 2597,
+      "test_pct": 14.59
+    },
+    "track_partition": {
+      "total_usable_tracks": 320,
+      "train_tracks": 224,
+      "train_track_pct": 70.0,
+      "val_tracks": 48,
+      "val_track_pct": 15.0,
+      "test_tracks": 48,
+      "test_track_pct": 15.0,
+      "track_id_leakage": 0
+    }
+  },
+  "input_features": {
+    "count": 20,
+    "names": [
+      "center_x",
+      "center_y",
+      "delta_x",
+      "delta_y",
+      "displacement_image",
+      "speed_image_px_per_sec",
+      "accel_image_px_per_sec2",
+      "heading_rad",
+      "heading_change_rad",
+      "ground_x",
+      "ground_y",
+      "ground_delta_x",
+      "ground_delta_y",
+      "displacement_ground",
+      "ground_speed_norm_per_sec",
+      "box_width",
+      "box_height",
+      "box_area",
+      "stopped_duration",
+      "speed_variance_rolling5"
+    ],
+    "scaling_status": "RAW_PHYSICAL_UNITS (Unscaled)",
+    "fitted_scaler_exists": false
+  },
+  "target_variables": {
+    "count": 9,
+    "names": [
+      "target_congestion_level",
+      "target_congestion_score",
+      "target_risk_level",
+      "target_is_approaching",
+      "target_approach_score",
+      "target_motion_state",
+      "target_maneuver_type",
+      "target_has_infraction",
+      "target_infraction_type"
+    ],
+    "provenance": "pseudo_rule_based (Zero human annotations exist)",
+    "auxiliary_targets": {
+      "y_next_disp": {
+        "description": "Next-step trajectory displacement (dx, dy)",
+        "shape": [17801, 2],
+        "type": "multi_output_regression"
+      }
+    },
+    "specifications": {
+      "target_congestion_level": {
+        "type": "multiclass_classification",
+        "num_classes": 3,
+        "class_mapping": {"0": "LOW", "1": "MEDIUM", "2": "HIGH"},
+        "all_counts": {"HIGH": 10540, "MEDIUM": 4171, "LOW": 3090},
+        "imbalance_ratio": 3.41,
+        "ml_suitability": "SUITABLE"
+      },
+      "target_congestion_score": {
+        "type": "single_output_regression",
+        "units": "normalized_score_0_to_100",
+        "range": [10.0, 100.0],
+        "mean": 67.21,
+        "std": 34.0,
+        "ml_suitability": "HIGHLY_SUITABLE"
+      },
+      "target_risk_level": {
+        "type": "multiclass_classification",
+        "num_classes": 3,
+        "class_mapping": {"0": "SAFE", "1": "WARNING", "2": "HIGH"},
+        "all_counts": {"SAFE": 12708, "HIGH": 4153, "WARNING": 940},
+        "imbalance_ratio": 13.52,
+        "ml_suitability": "CONDITIONALLY_SUITABLE"
+      },
+      "target_is_approaching": {
+        "type": "binary_classification",
+        "num_classes": 2,
+        "class_mapping": {"0": "NON_APPROACHING", "1": "APPROACHING"},
+        "all_counts": {"0": 12708, "1": 5093},
+        "imbalance_ratio": 2.5,
+        "ml_suitability": "HIGHLY_SUITABLE"
+      },
+      "target_approach_score": {
+        "type": "single_output_regression",
+        "units": "threat_score_0_to_100",
+        "range": [0.03, 100.0],
+        "mean": 39.32,
+        "std": 30.21,
+        "ml_suitability": "HIGHLY_SUITABLE"
+      },
+      "target_motion_state": {
+        "type": "multiclass_classification",
+        "num_classes": 4,
+        "class_mapping": {"0": "STOPPED", "1": "ACCELERATING", "2": "DECELERATING", "3": "CRUISING"},
+        "all_counts": {"DECELERATING": 7477, "STOPPED": 5710, "ACCELERATING": 4532, "CRUISING": 82},
+        "imbalance_ratio": 91.18,
+        "ml_suitability": "EXTREME_IMBALANCE"
+      },
+      "target_maneuver_type": {
+        "type": "multiclass_classification",
+        "num_classes": 4,
+        "class_mapping": {"0": "STATIONARY", "1": "TURNING_LEFT", "2": "TURNING_RIGHT", "3": "STRAIGHT"},
+        "all_counts": {"STRAIGHT": 9426, "STATIONARY": 5710, "TURNING_RIGHT": 1377, "TURNING_LEFT": 1288},
+        "imbalance_ratio": 7.32,
+        "ml_suitability": "SUITABLE"
+      },
+      "target_has_infraction": {
+        "type": "binary_classification",
+        "num_classes": 2,
+        "class_mapping": {"0": "COMPLIANT", "1": "INFRACTION_DETECTED"},
+        "all_counts": {"0": 14941, "1": 2860},
+        "imbalance_ratio": 5.22,
+        "ml_suitability": "SUITABLE"
+      },
+      "target_infraction_type": {
+        "type": "multiclass_classification",
+        "num_classes": 3,
+        "class_mapping": {"0": "NONE", "1": "OVERSPEEDING", "2": "ILLEGAL_STOPPING"},
+        "active_classes": [0, 1],
+        "all_counts": {"0": 14941, "1": 2860, "2": 0},
+        "imbalance_ratio": 5.22,
+        "ml_suitability": "SUITABLE_AS_BINARY"
+      }
+    }
+  },
+  "environment_audit": {
+    "python_version": "3.13.7",
+    "platform": "Windows-11-10.0.26200-SP0 (AMD64)",
+    "cpu": "AMD Ryzen 5 5500U with Radeon Graphics (6 Cores, 12 Threads)",
+    "ram_gb": 16.0,
+    "gpu_detected": false,
+    "gpu_hardware": "AMD Radeon(TM) Graphics (Integrated)",
+    "cuda_available": false,
+    "installed_ml_packages": {
+      "scikit_learn": "1.8.0",
+      "scipy": "1.17.0",
+      "numpy": "2.4.4",
+      "pandas": "3.0.2",
+      "joblib": "1.5.3",
+      "opencv_python": "5.0.0",
+      "matplotlib": "3.10.8"
+    },
+    "missing_deep_learning_packages": [
+      "torch",
+      "tensorflow",
+      "keras",
+      "xgboost",
+      "lightgbm"
+    ],
+    "existing_training_scripts": [],
+    "existing_traffic_models": []
+  },
+  "recommended_training_files": [
+    "data/hybrid_traffic/sequences/train_sequences.npz",
+    "data/hybrid_traffic/labels/train_labels.npz",
+    "data/hybrid_traffic/sequences/val_sequences.npz",
+    "data/hybrid_traffic/labels/val_labels.npz",
+    "data/hybrid_traffic/sequences/test_sequences.npz",
+    "data/hybrid_traffic/labels/test_labels.npz"
+  ]
+}

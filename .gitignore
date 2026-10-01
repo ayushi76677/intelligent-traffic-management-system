@@ -1,0 +1,78 @@
+# Environment variables and secrets (NEVER COMMIT)
+.env
+*.env
+.env.*
+!.env.example
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local testing and scratch artifacts
+scratch/
+.system_generated/
+*.log
+
+# Offline model runs & large intermediate video renders (>100MB)
+runs/
+*.avi
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Large source videos / rendered videos
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# YOLO/model weights
+*.pt
+*.onnx
+*.engine
+
+# Generated runtime/output directories
+runs/
+scratch/
+logs/
+predictions/
+plots/
+results/
+artifacts/
+
+# Large/generated telemetry and intermediate datasets
+data/telemetry_cache.pkl
+data/hybrid_traffic/processed_features.csv
+
+# Generated traffic analysis CSVs / intermediate outputs
+vehicle_closing_motion.csv
+clean_ground_motion.csv
+vehicle_ground_plane.csv
+traffic_vehicle_movement.csv
+traffic_smoothed_movement.csv
+
+# Generated hybrid dataset intermediates
+data/hybrid_traffic/train_data.csv
+data/hybrid_traffic/val_data.csv
+data/hybrid_traffic/test_data.csv
+data/hybrid_traffic/labels/
+data/hybrid_traffic/sequences/
+data/hybrid_traffic/processed_features.csv
+
+# Experimental baseline checkpoints
+checkpoints/baseline_*.pth
+
+# Local route/cache data
+traffic/road_routes_cache.json
+node_modules/
+*.csv
+*.pkl
+*.pickle

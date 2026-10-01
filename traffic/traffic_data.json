@@ -1,0 +1,80 @@
+{
+  "version": "1.0",
+  "data_source_label": "REAL MAP TRAFFIC DATA",
+  "provider": "OpenStreetMap & CartoDB Vector Tiles",
+  "disclaimer": "Map traffic data reflects baseline cartographic road classifications and regional telemetry. Emerge CV Intelligence is calculated independently from computer vision.",
+  "arterial_corridors": [
+    {
+      "corridor_id": "COR-IND-01",
+      "city": "Indore",
+      "road_name": "Agra-Bombay (AB) Road / BRTS Corridor",
+      "speed_limit_kmh": 50,
+      "lane_configuration": "3 Lanes Each Direction + Central Dedicated Busway",
+      "current_traffic_condition": "HEAVY",
+      "traffic_level_color": "#ef4444",
+      "congestion_status": "CONGESTED",
+      "peak_hours": "09:00 - 11:30, 18:00 - 21:00",
+      "monitored_intersections": ["Vijay Nagar Intersection", "Palasia Square", "Bhawarkua Square"]
+    },
+    {
+      "corridor_id": "COR-IND-02",
+      "city": "Indore",
+      "road_name": "Indore Ring Road (MR-10)",
+      "speed_limit_kmh": 60,
+      "lane_configuration": "2x2 Dual Carriageway with Service Lanes",
+      "current_traffic_condition": "MODERATE",
+      "traffic_level_color": "#f59e0b",
+      "congestion_status": "STABLE",
+      "peak_hours": "17:30 - 20:30",
+      "monitored_intersections": ["Radisson Square", "Khajrana Square"]
+    },
+    {
+      "corridor_id": "COR-DEL-01",
+      "city": "Delhi",
+      "road_name": "Vikas Marg & Bahadur Shah Zafar Marg (ITO)",
+      "speed_limit_kmh": 50,
+      "lane_configuration": "4 Lanes Each Way",
+      "current_traffic_condition": "HEAVY",
+      "traffic_level_color": "#ef4444",
+      "congestion_status": "HIGH QUEUE SPILLOVER",
+      "peak_hours": "08:30 - 11:30, 17:30 - 20:30",
+      "monitored_intersections": ["ITO Junction", "Delhi Gate"]
+    },
+    {
+      "corridor_id": "COR-MUM-01",
+      "city": "Mumbai",
+      "road_name": "Western Express Highway (WEH)",
+      "speed_limit_kmh": 70,
+      "lane_configuration": "4x4 Grade-Separated Expressway",
+      "current_traffic_condition": "HEAVY",
+      "traffic_level_color": "#ef4444",
+      "congestion_status": "BOTTLENECK AT FLYOVER SPLIT",
+      "peak_hours": "08:00 - 12:00, 17:30 - 22:00",
+      "monitored_intersections": ["Andheri Flyover", "Vile Parle Junction"]
+    },
+    {
+      "corridor_id": "COR-BLR-01",
+      "city": "Bengaluru",
+      "road_name": "Central Silk Board & Outer Ring Road (ORR)",
+      "speed_limit_kmh": 50,
+      "lane_configuration": "Dual Carriageway + Metro Construction Diversion",
+      "current_traffic_condition": "SEVERE",
+      "traffic_level_color": "#ef4444",
+      "congestion_status": "GRIDLOCK / BOTTLENECK",
+      "peak_hours": "08:30 - 12:30, 17:00 - 21:30",
+      "monitored_intersections": ["Central Silk Board Junction", "HSR Layout 14th Main"]
+    },
+    {
+      "corridor_id": "COR-HYD-01",
+      "city": "Hyderabad",
+      "road_name": "HITEC City Main Road",
+      "speed_limit_kmh": 50,
+      "lane_configuration": "3 Lanes Each Direction",
+      "current_traffic_condition": "MODERATE",
+      "traffic_level_color": "#f59e0b",
+      "congestion_status": "MODERATE INFLOW",
+      "peak_hours": "09:00 - 11:30, 18:00 - 20:30",
+      "monitored_intersections": ["Cyber Towers Junction", "Mindspace Circle"]
+    }
+  ]
+}

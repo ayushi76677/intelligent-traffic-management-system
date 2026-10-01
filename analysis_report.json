@@ -1,0 +1,14 @@
+{
+    "total_vehicles": 122,
+    "average_vehicles_per_interval": 24.4,
+    "peak_interval": "10-20",
+    "peak_vehicles": 29,
+    "motorcycle_percentage": 39.34,
+    "heavy_vehicle_percentage": 22.95,
+    "high_traffic_intervals": 3,
+    "patterns": [
+        "Repeated high-traffic conditions detected.",
+        "Significant heavy-vehicle presence detected.",
+        "A clear traffic peak was detected."
+    ]
+}

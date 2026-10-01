@@ -1,0 +1,16 @@
+.git
+.env
+*.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.pytest_cache/
+scratch/
+runs/
+*.avi
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

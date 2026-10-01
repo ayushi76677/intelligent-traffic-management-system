@@ -1,0 +1,44 @@
+{
+  "version": "1.0",
+  "default_urban_limit_kmh": 50,
+  "default_intersection_limit_kmh": 30,
+  "road_limits": {
+    "AB Road & Ring Road Crossing": {
+      "road": "AB Road & Ring Road Crossing",
+      "allowed_speed_kmh": 50,
+      "city": "Indore"
+    },
+    "Palasia Square / AB Road Corridor": {
+      "road": "Palasia Square / AB Road Corridor",
+      "city": "Indore",
+      "allowed_speed_kmh": 50,
+      "intersection_speed_kmh": 35
+    },
+    "Bhopal Junction Main Approach": {
+      "road": "Bhopal Junction Main Approach",
+      "city": "Bhopal",
+      "allowed_speed_kmh": 40,
+      "intersection_speed_kmh": 25
+    },
+    "Connaught Place Radial Corridor": {
+      "road": "Connaught Place Radial Corridor",
+      "city": "Delhi",
+      "allowed_speed_kmh": 50,
+      "intersection_speed_kmh": 30
+    },
+    "Silk Board Junction Inflow": {
+      "road": "Silk Board Junction Inflow",
+      "city": "Bengaluru",
+      "allowed_speed_kmh": 45,
+      "intersection_speed_kmh": 20
+    }
+  },
+  "zone_limits": {
+    "ZONE 1": 40,
+    "ZONE 2": 35,
+    "ZONE 3": 25,
+    "ZONE 4": 30,
+    "ZONE 5": 30,
+    "ZONE 6": 35
+  }
+}

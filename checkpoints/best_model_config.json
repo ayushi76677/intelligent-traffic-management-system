@@ -1,0 +1,264 @@
+{
+  "model_architecture": "TCNTransformerHybrid",
+  "total_params": 226937,
+  "best_epoch": 7,
+  "best_val_loss": 6.614694194360212,
+  "config": {
+    "project": {
+      "name": "hybrid_traffic_intelligence",
+      "phase": 5,
+      "seed": 42,
+      "device": "cpu"
+    },
+    "dataset": {
+      "train_sequences": "data/hybrid_traffic/sequences/train_sequences.npz",
+      "train_labels": "data/hybrid_traffic/labels/train_labels.npz",
+      "val_sequences": "data/hybrid_traffic/sequences/val_sequences.npz",
+      "val_labels": "data/hybrid_traffic/labels/val_labels.npz",
+      "test_sequences": "data/hybrid_traffic/sequences/test_sequences.npz",
+      "test_labels": "data/hybrid_traffic/labels/test_labels.npz",
+      "scaler_path": "data/hybrid_traffic/scalers/feature_scaler.joblib",
+      "sequence_length": 20,
+      "feature_count": 20,
+      "targets": {
+        "target_congestion_level": {
+          "type": "multiclass",
+          "num_classes": 3,
+          "classes": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ],
+          "loss": "cross_entropy",
+          "weight": 1.0
+        },
+        "target_congestion_score": {
+          "type": "regression",
+          "output_dim": 1,
+          "range": [
+            10.0,
+            100.0
+          ],
+          "loss": "smooth_l1",
+          "weight": 0.5
+        },
+        "target_risk_level": {
+          "type": "multiclass",
+          "num_classes": 3,
+          "classes": [
+            "SAFE",
+            "WARNING",
+            "HIGH"
+          ],
+          "loss": "cross_entropy",
+          "weight": 1.2,
+          "class_weights": [
+            0.47,
+            6.31,
+            1.43
+          ]
+        },
+        "target_is_approaching": {
+          "type": "binary",
+          "num_classes": 2,
+          "classes": [
+            "NON_APPROACHING",
+            "APPROACHING"
+          ],
+          "loss": "binary_cross_entropy",
+          "weight": 1.0
+        },
+        "target_approach_score": {
+          "type": "regression",
+          "output_dim": 1,
+          "range": [
+            0.03,
+            100.0
+          ],
+          "loss": "smooth_l1",
+          "weight": 0.5
+        },
+        "target_motion_state": {
+          "type": "multiclass",
+          "num_classes": 4,
+          "classes": [
+            "STOPPED",
+            "ACCELERATING",
+            "DECELERATING",
+            "CRUISING"
+          ],
+          "loss": "cross_entropy",
+          "weight": 1.0,
+          "class_weights": [
+            1.04,
+            1.31,
+            0.79,
+            54.27
+          ]
+        },
+        "target_maneuver_type": {
+          "type": "multiclass",
+          "num_classes": 4,
+          "classes": [
+            "STATIONARY",
+            "TURNING_LEFT",
+            "TURNING_RIGHT",
+            "STRAIGHT"
+          ],
+          "loss": "cross_entropy",
+          "weight": 1.0,
+          "class_weights": [
+            1.04,
+            4.6,
+            4.31,
+            0.63
+          ]
+        },
+        "target_has_infraction": {
+          "type": "binary",
+          "num_classes": 2,
+          "classes": [
+            "COMPLIANT",
+            "INFRACTION"
+          ],
+          "loss": "binary_cross_entropy",
+          "weight": 1.2,
+          "pos_weight": 5.22
+        },
+        "target_infraction_type": {
+          "type": "multiclass",
+          "num_classes": 3,
+          "active_classes": [
+            0,
+            1
+          ],
+          "classes": [
+            "NONE",
+            "OVERSPEEDING",
+            "ILLEGAL_STOPPING"
+          ],
+          "loss": "cross_entropy",
+          "weight": 0.8
+        },
+        "aux_next_displacement": {
+          "type": "regression",
+          "output_dim": 2,
+          "loss": "smooth_l1",
+          "weight": 0.5
+        }
+      }
+    },
+    "model": {
+      "input_dim": 20,
+      "sequence_length": 20,
+      "hidden_dim": 64,
+      "dropout": 0.2,
+      "tcn": {
+        "kernel_size": 3,
+        "channels": [
+          64,
+          64,
+          64,
+          64
+        ],
+        "dilation_rates": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "dropout": 0.2,
+        "use_batch_norm": true,
+        "activation": "gelu"
+      },
+      "transformer": {
+        "num_layers": 2,
+        "num_heads": 4,
+        "feedforward_dim": 256,
+        "dropout": 0.1,
+        "activation": "gelu",
+        "norm_first": true
+      },
+      "gated_fusion": {
+        "gate_activation": "sigmoid",
+        "hidden_dim": 64
+      },
+      "temporal_pooling": {
+        "type": "attention",
+        "num_heads": 1
+      }
+    },
+    "training": {
+      "batch_size": 64,
+      "epochs": 30,
+      "learning_rate": 0.001,
+      "min_learning_rate": 1e-05,
+      "weight_decay": 0.0001,
+      "grad_clip_norm": 1.0,
+      "optimizer": "adamw",
+      "scheduler": "cosine",
+      "early_stopping": {
+        "enabled": true,
+        "patience": 7,
+        "monitor": "val_total_loss",
+        "mode": "min",
+        "min_delta": 0.0001
+      },
+      "loss_weighting": {
+        "mode": "static"
+      }
+    }
+  },
+  "calibrated_task_configs": {
+    "target_congestion_level": {
+      "type": "multiclass",
+      "weight": 1.0,
+      "loss": "cross_entropy"
+    },
+    "target_congestion_score": {
+      "type": "regression",
+      "weight": 0.05,
+      "loss": "smooth_l1"
+    },
+    "target_risk_level": {
+      "type": "multiclass",
+      "weight": 1.2,
+      "loss": "cross_entropy"
+    },
+    "target_is_approaching": {
+      "type": "binary",
+      "weight": 1.0,
+      "loss": "cross_entropy"
+    },
+    "target_approach_score": {
+      "type": "regression",
+      "weight": 0.05,
+      "loss": "smooth_l1"
+    },
+    "target_motion_state": {
+      "type": "multiclass",
+      "weight": 1.0,
+      "loss": "cross_entropy"
+    },
+    "target_maneuver_type": {
+      "type": "multiclass",
+      "weight": 1.0,
+      "loss": "cross_entropy"
+    },
+    "target_has_infraction": {
+      "type": "binary",
+      "weight": 1.2,
+      "loss": "cross_entropy"
+    },
+    "target_infraction_type": {
+      "type": "multiclass",
+      "weight": 0.8,
+      "loss": "cross_entropy"
+    },
+    "aux_next_displacement": {
+      "type": "regression",
+      "weight": 0.5,
+      "loss": "smooth_l1"
+    }
+  }
+}

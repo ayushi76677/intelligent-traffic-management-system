@@ -1,0 +1,239 @@
+{
+  "version": "1.0",
+  "zones": [
+    {
+      "zone_id": "ZONE_1",
+      "name": "Main Approach Corridor (AB Road North)",
+      "type": "SEVERE",
+      "congestion_level": "SEVERE",
+      "congestion_score": 85.8,
+      "density_score": 100.0,
+      "flow_score": 98.67,
+      "variation_score": 31.33,
+      "total_vehicles": 546,
+      "peak_interval": 2,
+      "peak_interval_vehicles": 148,
+      "average_interval_vehicles": 103.67,
+      "average_speed_kmh": 28.5,
+      "speed_threshold_kmh": 40,
+      "severity_threshold": "HIGH",
+      "enabled": true,
+      "camera_id": "CAM-IND-001",
+      "road": "AB Road Corridor",
+      "city": "Indore",
+      "coordinates": [
+        {
+          "lat": 22.7542,
+          "lng": 75.8932
+        },
+        {
+          "lat": 22.7544,
+          "lng": 75.8941
+        },
+        {
+          "lat": 22.7535,
+          "lng": 75.8943
+        },
+        {
+          "lat": 22.7534,
+          "lng": 75.8934
+        }
+      ]
+    },
+    {
+      "zone_id": "ZONE_2",
+      "name": "Eastbound Exit / Turning Lane",
+      "type": "BUSY",
+      "congestion_level": "BUSY",
+      "congestion_score": 62.4,
+      "density_score": 65.0,
+      "flow_score": 58.2,
+      "variation_score": 42.0,
+      "total_vehicles": 312,
+      "peak_interval": 3,
+      "peak_interval_vehicles": 92,
+      "average_interval_vehicles": 58.4,
+      "average_speed_kmh": 34.2,
+      "speed_threshold_kmh": 35,
+      "severity_threshold": "MEDIUM",
+      "enabled": true,
+      "camera_id": "CAM-IND-001",
+      "road": "Ring Road East",
+      "city": "Indore",
+      "coordinates": [
+        {
+          "lat": 22.7536,
+          "lng": 75.8942
+        },
+        {
+          "lat": 22.7537,
+          "lng": 75.8953
+        },
+        {
+          "lat": 22.753,
+          "lng": 75.8952
+        },
+        {
+          "lat": 22.7529,
+          "lng": 75.8941
+        }
+      ]
+    },
+    {
+      "zone_id": "ZONE_3",
+      "name": "Intersection Core Junction",
+      "type": "CONGESTED",
+      "congestion_level": "CONGESTED",
+      "congestion_score": 74.5,
+      "density_score": 78.0,
+      "flow_score": 71.0,
+      "variation_score": 28.5,
+      "total_vehicles": 418,
+      "peak_interval": 2,
+      "peak_interval_vehicles": 115,
+      "average_interval_vehicles": 82.1,
+      "average_speed_kmh": 18.2,
+      "speed_threshold_kmh": 25,
+      "severity_threshold": "HIGH",
+      "enabled": true,
+      "camera_id": "CAM-IND-001",
+      "road": "Central Square",
+      "city": "Indore",
+      "coordinates": [
+        {
+          "lat": 22.7535,
+          "lng": 75.8933
+        },
+        {
+          "lat": 22.7536,
+          "lng": 75.8941
+        },
+        {
+          "lat": 22.7529,
+          "lng": 75.8942
+        },
+        {
+          "lat": 22.7528,
+          "lng": 75.8934
+        }
+      ]
+    },
+    {
+      "zone_id": "ZONE_4",
+      "name": "Southbound Queue Area",
+      "type": "CONGESTED",
+      "congestion_level": "CONGESTED",
+      "congestion_score": 71.2,
+      "density_score": 75.5,
+      "flow_score": 68.0,
+      "variation_score": 35.0,
+      "total_vehicles": 389,
+      "peak_interval": 1,
+      "peak_interval_vehicles": 108,
+      "average_interval_vehicles": 74.8,
+      "average_speed_kmh": 22.4,
+      "speed_threshold_kmh": 30,
+      "severity_threshold": "MEDIUM",
+      "enabled": true,
+      "camera_id": "CAM-IND-001",
+      "road": "AB Road South",
+      "city": "Indore",
+      "coordinates": [
+        {
+          "lat": 22.7528,
+          "lng": 75.8934
+        },
+        {
+          "lat": 22.7529,
+          "lng": 75.8942
+        },
+        {
+          "lat": 22.7519,
+          "lng": 75.894
+        },
+        {
+          "lat": 22.7518,
+          "lng": 75.8932
+        }
+      ]
+    },
+    {
+      "zone_id": "ZONE_5",
+      "name": "Westbound Inflow Lane",
+      "type": "NORMAL",
+      "congestion_level": "NORMAL",
+      "congestion_score": 38.6,
+      "density_score": 40.0,
+      "flow_score": 35.5,
+      "variation_score": 18.0,
+      "total_vehicles": 194,
+      "peak_interval": 4,
+      "peak_interval_vehicles": 52,
+      "average_interval_vehicles": 36.2,
+      "average_speed_kmh": 38.0,
+      "speed_threshold_kmh": 30,
+      "severity_threshold": "LOW",
+      "enabled": true,
+      "camera_id": "CAM-IND-001",
+      "road": "Ring Road West",
+      "city": "Indore",
+      "coordinates": [
+        {
+          "lat": 22.7534,
+          "lng": 75.8922
+        },
+        {
+          "lat": 22.7535,
+          "lng": 75.8933
+        },
+        {
+          "lat": 22.7527,
+          "lng": 75.8933
+        },
+        {
+          "lat": 22.7526,
+          "lng": 75.8923
+        }
+      ]
+    },
+    {
+      "zone_id": "ZONE_6",
+      "name": "Southeast Exit Lane",
+      "type": "NORMAL",
+      "congestion_level": "NORMAL",
+      "congestion_score": 44.1,
+      "density_score": 46.2,
+      "flow_score": 42.0,
+      "variation_score": 22.1,
+      "total_vehicles": 228,
+      "peak_interval": 3,
+      "peak_interval_vehicles": 64,
+      "average_interval_vehicles": 41.5,
+      "average_speed_kmh": 36.8,
+      "speed_threshold_kmh": 35,
+      "severity_threshold": "LOW",
+      "enabled": true,
+      "camera_id": "CAM-IND-001",
+      "road": "MR-10 Connector",
+      "city": "Indore",
+      "coordinates": [
+        {
+          "lat": 22.7528,
+          "lng": 75.8942
+        },
+        {
+          "lat": 22.7529,
+          "lng": 75.8951
+        },
+        {
+          "lat": 22.752,
+          "lng": 75.8949
+        },
+        {
+          "lat": 22.7519,
+          "lng": 75.8941
+        }
+      ]
+    }
+  ]
+}

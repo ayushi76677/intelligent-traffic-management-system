@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: smart-traffic-management
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "python -m waitress --host=0.0.0.0 --port=$PORT --threads=4 app:app"
+    healthCheckPath: /api/status
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: GOOGLE_MAPS_MAP_ID
+        sync: false
+      - key: INRIX_APP_ID
+        sync: false
+      - key: INRIX_APP_KEY
+        sync: false
+      - key: INRIX_HASH_TOKEN
+        sync: false

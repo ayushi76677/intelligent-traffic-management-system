@@ -1,0 +1,347 @@
+{
+  "version": "1.0",
+  "country": "India",
+  "cities": [
+    {
+      "id": "indore",
+      "name": "Indore",
+      "state": "Madhya Pradesh",
+      "latitude": 22.7196,
+      "longitude": 75.8577,
+      "zoom": 13,
+      "command_center": "Indore Smart City Integrated Command and Control Centre (ICCC)",
+      "intersections": [
+        {
+          "id": "ind-vijay-nagar",
+          "name": "Vijay Nagar Intersection",
+          "area": "Vijay Nagar",
+          "road": "AB Road & Ring Road Crossing",
+          "latitude": 22.7533,
+          "longitude": 75.8937,
+          "primary_camera": "CAM-IND-001",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "Computer Vision & Smart Signalization"
+        },
+        {
+          "id": "ind-palasia",
+          "name": "Palasia Square",
+          "area": "Old Palasia",
+          "road": "AB Road Corridor",
+          "latitude": 22.7244,
+          "longitude": 75.8839,
+          "primary_camera": "CAM-IND-002",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "Location & Traffic Sensor"
+        },
+        {
+          "id": "ind-bhawarkua",
+          "name": "Bhawarkua Square",
+          "area": "Bhawarkua",
+          "road": "BRTS Corridor & Khandwa Road",
+          "latitude": 22.6926,
+          "longitude": 75.8676,
+          "primary_camera": "CAM-IND-003",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Loop Detector & Fixed Camera"
+        },
+        {
+          "id": "ind-radisson",
+          "name": "Radisson Square",
+          "area": "Scheme 54",
+          "road": "Ring Road & Bypass Junction",
+          "latitude": 22.7441,
+          "longitude": 75.9042,
+          "primary_camera": "CAM-IND-004",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Municipal CCTV Stream"
+        },
+        {
+          "id": "ind-rajwada",
+          "name": "Rajwada Chowk",
+          "area": "Old City Heritage Zone",
+          "road": "MG Road",
+          "latitude": 22.7186,
+          "longitude": 75.8553,
+          "primary_camera": "CAM-IND-005",
+          "status": "OFFLINE",
+          "monitoring_type": "Pedestrian & Traffic Surveillance"
+        }
+      ]
+    },
+    {
+      "id": "bhopal",
+      "name": "Bhopal",
+      "state": "Madhya Pradesh",
+      "latitude": 23.2599,
+      "longitude": 77.4126,
+      "zoom": 13,
+      "command_center": "Bhopal Municipal Corporation Traffic Management Centre",
+      "intersections": [
+        {
+          "id": "bpl-mp-nagar",
+          "name": "MP Nagar Zone-1 Crossing",
+          "area": "Maharana Pratap Nagar",
+          "road": "Main Commercial Arterial Link",
+          "latitude": 23.2332,
+          "longitude": 77.4334,
+          "primary_camera": "CAM-BPL-001",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "Smart City Surveillance"
+        },
+        {
+          "id": "bpl-board-office",
+          "name": "Board Office Square",
+          "area": "Shivaji Nagar",
+          "road": "Link Road No. 1",
+          "latitude": 23.2355,
+          "longitude": 77.4312,
+          "primary_camera": "CAM-BPL-002",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Automated Traffic Sensor"
+        },
+        {
+          "id": "bpl-roshanpura",
+          "name": "Roshanpura Square",
+          "area": "Malviya Nagar",
+          "road": "Apex Bank Road & TT Nagar Road",
+          "latitude": 23.2428,
+          "longitude": 77.4018,
+          "primary_camera": "CAM-BPL-003",
+          "status": "OFFLINE",
+          "monitoring_type": "Traffic Police Camera"
+        }
+      ]
+    },
+    {
+      "id": "delhi",
+      "name": "Delhi",
+      "state": "National Capital Territory",
+      "latitude": 28.6139,
+      "longitude": 77.2090,
+      "zoom": 12,
+      "command_center": "Delhi Traffic Police Integrated Traffic Management System (ITMS)",
+      "intersections": [
+        {
+          "id": "del-ito",
+          "name": "ITO Junction",
+          "area": "ITO / Bahadur Shah Zafar Marg",
+          "road": "Vikas Marg & Ring Road Link",
+          "latitude": 28.6289,
+          "longitude": 77.2405,
+          "primary_camera": "CAM-DEL-001",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "ITMS High-Density Detection"
+        },
+        {
+          "id": "del-aiims",
+          "name": "AIIMS Flyover Junction",
+          "area": "Ansari Nagar",
+          "road": "Ring Road & Sri Aurobindo Marg",
+          "latitude": 28.5686,
+          "longitude": 77.2090,
+          "primary_camera": "CAM-DEL-002",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Emergency Corridor Sensor"
+        },
+        {
+          "id": "del-dhaula-kuan",
+          "name": "Dhaula Kuan Interchange",
+          "area": "Dhaula Kuan",
+          "road": "National Highway 48 & Ring Road",
+          "latitude": 28.5921,
+          "longitude": 77.1563,
+          "primary_camera": "CAM-DEL-003",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Highway Traffic Control"
+        },
+        {
+          "id": "del-cp",
+          "name": "Connaught Place Outer Circle",
+          "area": "Connaught Place",
+          "road": "Barakhamba Road & Janpath Radial",
+          "latitude": 28.6315,
+          "longitude": 77.2167,
+          "primary_camera": "CAM-DEL-004",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Commercial Core Surveillance"
+        }
+      ]
+    },
+    {
+      "id": "mumbai",
+      "name": "Mumbai",
+      "state": "Maharashtra",
+      "latitude": 19.0760,
+      "longitude": 72.8777,
+      "zoom": 12,
+      "command_center": "Mumbai Traffic Police Operations Command Centre",
+      "intersections": [
+        {
+          "id": "mum-weh-andheri",
+          "name": "Western Express Highway - Andheri Flyover",
+          "area": "Andheri East",
+          "road": "Western Express Highway (NH 48)",
+          "latitude": 19.1136,
+          "longitude": 72.8697,
+          "primary_camera": "CAM-MUM-001",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "Expressway Corridor CCTV"
+        },
+        {
+          "id": "mum-sea-link",
+          "name": "Bandra-Worli Sea Link Toll Plaza",
+          "area": "Bandra West",
+          "road": "Rajiv Gandhi Sea Link",
+          "latitude": 19.0330,
+          "longitude": 72.8180,
+          "primary_camera": "CAM-MUM-002",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Tollway ANPR & Speed Sensor"
+        },
+        {
+          "id": "mum-dadar-tt",
+          "name": "Dadar TT Circle",
+          "area": "Dadar",
+          "road": "Dr. Babasaheb Ambedkar Road",
+          "latitude": 19.0178,
+          "longitude": 72.8478,
+          "primary_camera": "CAM-MUM-003",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Transit Hub Traffic Camera"
+        }
+      ]
+    },
+    {
+      "id": "bengaluru",
+      "name": "Bengaluru",
+      "state": "Karnataka",
+      "latitude": 12.9716,
+      "longitude": 77.5946,
+      "zoom": 12,
+      "command_center": "Bengaluru Traffic Police Traffic Management Centre (TMC)",
+      "intersections": [
+        {
+          "id": "blr-silk-board",
+          "name": "Central Silk Board Junction",
+          "area": "BTM Layout / HSR Layout",
+          "road": "Hosur Road & Outer Ring Road (NH 44)",
+          "latitude": 12.9176,
+          "longitude": 77.6238,
+          "primary_camera": "CAM-BLR-001",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "High-Congestion Bottleneck Sensor"
+        },
+        {
+          "id": "blr-marathahalli",
+          "name": "Marathahalli Bridge Junction",
+          "area": "Marathahalli",
+          "road": "Outer Ring Road & HAL Old Airport Road",
+          "latitude": 12.9569,
+          "longitude": 77.7011,
+          "primary_camera": "CAM-BLR-002",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "IT Corridor Video Sensor"
+        },
+        {
+          "id": "blr-ecity",
+          "name": "Electronic City Toll Gate",
+          "area": "Electronic City Phase 1",
+          "road": "Hosur Road Elevated Expressway",
+          "latitude": 12.8452,
+          "longitude": 77.6602,
+          "primary_camera": "CAM-BLR-003",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Expressway Inflow Monitoring"
+        }
+      ]
+    },
+    {
+      "id": "pune",
+      "name": "Pune",
+      "state": "Maharashtra",
+      "latitude": 18.5204,
+      "longitude": 73.8567,
+      "zoom": 12,
+      "command_center": "Pune Smart City Development Corp Command Center",
+      "intersections": [
+        {
+          "id": "pun-university",
+          "name": "Savitribai Phule Pune University Chowk",
+          "area": "Ganeshkhind",
+          "road": "Ganeshkhind Road & Baner Road",
+          "latitude": 18.5414,
+          "longitude": 73.8298,
+          "primary_camera": "CAM-PUN-001",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "Smart Traffic Signal Controller"
+        },
+        {
+          "id": "pun-swargate",
+          "name": "Swargate Chowk",
+          "area": "Swargate",
+          "road": "Satara Road & Tilak Road",
+          "latitude": 18.5018,
+          "longitude": 73.8586,
+          "primary_camera": "CAM-PUN-002",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Multimodal Transit Hub Camera"
+        },
+        {
+          "id": "pun-hinjewadi",
+          "name": "Hinjewadi Phase 1 Circle",
+          "area": "Hinjewadi IT Park",
+          "road": "Rajiv Gandhi Infotech Park Road",
+          "latitude": 18.5913,
+          "longitude": 73.7389,
+          "primary_camera": "CAM-PUN-003",
+          "status": "OFFLINE",
+          "monitoring_type": "Tech Park Arterial Sensor"
+        }
+      ]
+    },
+    {
+      "id": "hyderabad",
+      "name": "Hyderabad",
+      "state": "Telangana",
+      "latitude": 17.3850,
+      "longitude": 78.4867,
+      "zoom": 12,
+      "command_center": "Hyderabad City Police Integrated Command and Control Centre",
+      "intersections": [
+        {
+          "id": "hyd-cyber-towers",
+          "name": "Cyber Towers Junction",
+          "area": "Madhapur / HITEC City",
+          "road": "HITEC City Main Road",
+          "latitude": 17.4504,
+          "longitude": 78.3808,
+          "primary_camera": "CAM-HYD-001",
+          "status": "MONITORED - ACTIVE",
+          "monitoring_type": "IT Corridor Intelligent Sensor"
+        },
+        {
+          "id": "hyd-gachibowli",
+          "name": "Gachibowli Junction",
+          "area": "Gachibowli",
+          "road": "Old Mumbai Highway & Outer Ring Road Link",
+          "latitude": 17.4401,
+          "longitude": 78.3489,
+          "primary_camera": "CAM-HYD-002",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Flyover Inflow Monitoring"
+        },
+        {
+          "id": "hyd-panjagutta",
+          "name": "Panjagutta Central Circle",
+          "area": "Panjagutta",
+          "road": "NH 65 / Nagarjuna Circle Road",
+          "latitude": 17.4265,
+          "longitude": 78.4518,
+          "primary_camera": "CAM-HYD-003",
+          "status": "MONITORED - SENSOR ONLY",
+          "monitoring_type": "Commercial Arterial Camera"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,441 @@
+{
+  "version": "1.0",
+  "data_integrity_policy": "Real location coordinates. No fabricated streaming URLs.",
+  "cameras": [
+    {
+      "camera_id": "CAM-IND-001",
+      "city": "Indore",
+      "area": "Vijay Nagar",
+      "road": "AB Road & Ring Road Crossing",
+      "latitude": 22.7533,
+      "longitude": 75.8937,
+      "source": "Indore Smart City Development Ltd (ISCDL) - Surveillance Network",
+      "feed_status": "LIVE",
+      "feed_availability": "LIVE FEED AVAILABLE",
+      "feed_url": "/video/traffic2.mp4",
+      "authorized": true,
+      "data_source_label": "AUTHORIZED CCTV / PROTOTYPE FEED",
+      "direction": "Elevated North-East View overlooking Central Crossing",
+      "camera_type": "High-Definition 1080p Fixed Sensor",
+      "last_updated": "2026-09-13T19:25:00+05:30",
+      "monitoring_zones": {
+        "ZONE 1": {
+          "phase": "Phase 1",
+          "name": "Main Approach Corridor",
+          "direction": "Inflow North"
+        },
+        "ZONE 2": {
+          "phase": "Phase 2",
+          "name": "Eastbound Exit / Turning Lane",
+          "direction": "Outflow East"
+        },
+        "ZONE 3": {
+          "phase": "Phase 1",
+          "name": "Northbound Core Crossing",
+          "direction": "Inflow South to North"
+        },
+        "ZONE 4": {
+          "phase": "Phase 3",
+          "name": "Southbound Inflow Queue",
+          "direction": "Queue South"
+        },
+        "ZONE 5": {
+          "phase": "Phase 3",
+          "name": "Westbound Left Approach",
+          "direction": "Inflow West"
+        },
+        "ZONE 6": {
+          "phase": "Phase 2",
+          "name": "Southeast Exit Link",
+          "direction": "Outflow Southeast"
+        }
+      }
+    },
+    {
+      "camera_id": "CAM-IND-002",
+      "city": "Indore",
+      "area": "Old Palasia",
+      "road": "Palasia Square / AB Road Corridor",
+      "latitude": 22.7244,
+      "longitude": 75.8839,
+      "source": "Indore Traffic Police ITMS Feed",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "South-West Approach Corridor",
+      "camera_type": "PTZ Optical Zoom 4K",
+      "last_updated": "2026-09-13T17:15:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "A1",
+          "name": "Approach North",
+          "description": "Palasia Main North Entry",
+          "type": "entry"
+        },
+        {
+          "id": "A2",
+          "name": "Approach South",
+          "description": "Geeta Bhawan Link",
+          "type": "entry"
+        },
+        {
+          "id": "A3",
+          "name": "Intersection Core",
+          "description": "Palasia Signal Square",
+          "type": "crossing"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-IND-003",
+      "city": "Indore",
+      "area": "Bhawarkua",
+      "road": "Bhawarkua Square / BRTS Junction",
+      "latitude": 22.6926,
+      "longitude": 75.8676,
+      "source": "Atal Indore City Transport Services (AICTSL)",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "BRTS Dedicated Bus Lane Inflow",
+      "camera_type": "ANPR Traffic Enforcement Unit",
+      "last_updated": "2026-09-13T16:50:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "B1",
+          "name": "BRTS Dedicated Lane",
+          "description": "Transit Corridor",
+          "type": "transit"
+        },
+        {
+          "id": "B2",
+          "name": "Mixed Traffic East",
+          "description": "Khandwa Road Arterial",
+          "type": "entry"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-IND-004",
+      "city": "Indore",
+      "area": "Scheme 54",
+      "road": "Radisson Square / Ring Road & Bypass",
+      "latitude": 22.7441,
+      "longitude": 75.9042,
+      "source": "ISCDL Ring Road Monitoring Network",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Eastbound Bypass Connector",
+      "camera_type": "Dome 360-degree Surveillance Unit",
+      "last_updated": "2026-09-13T15:30:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "R1",
+          "name": "Bypass Approach",
+          "description": "Heavy Vehicle Flow",
+          "type": "entry"
+        },
+        {
+          "id": "R2",
+          "name": "MR-10 Crossway",
+          "description": "Urban Arterial Split",
+          "type": "crossing"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-IND-005",
+      "city": "Indore",
+      "area": "Old City Heritage Zone",
+      "road": "Rajwada Chowk / MG Road",
+      "latitude": 22.7186,
+      "longitude": 75.8553,
+      "source": "Indore Municipal Corporation",
+      "feed_status": "OFFLINE",
+      "feed_availability": "CAMERA OFFLINE / MAINTENANCE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Heritage Plaza Pedestrian & Rickshaw Concourse",
+      "camera_type": "Fixed Wide-Angle Camera",
+      "last_updated": "2026-09-13T12:00:00+05:30",
+      "monitoring_zones": []
+    },
+    {
+      "camera_id": "CAM-BPL-001",
+      "city": "Bhopal",
+      "area": "MP Nagar Zone-1",
+      "road": "Main Commercial Arterial Link",
+      "latitude": 23.2332,
+      "longitude": 77.4334,
+      "source": "Bhopal Smart City Development Corporation (BSCDCL)",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Northbound Arterial Link toward Chetak Bridge",
+      "camera_type": "High-Definition Fixed Sensor",
+      "last_updated": "2026-09-13T17:00:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "M1",
+          "name": "Approach Chetak Bridge",
+          "description": "Flyover Inflow",
+          "type": "entry"
+        },
+        {
+          "id": "M2",
+          "name": "Commercial Plaza Core",
+          "description": "Market Crossing",
+          "type": "crossing"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-BPL-002",
+      "city": "Bhopal",
+      "area": "Shivaji Nagar",
+      "road": "Board Office Square / Link Road No. 1",
+      "latitude": 23.2355,
+      "longitude": 77.4312,
+      "source": "Bhopal Traffic Police ITMS",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Link Road 1 Approach",
+      "camera_type": "ANPR Multi-Lane Unit",
+      "last_updated": "2026-09-13T16:30:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "BO1",
+          "name": "Apex Bank Approach",
+          "description": "Link Road Arterial",
+          "type": "entry"
+        },
+        {
+          "id": "BO2",
+          "name": "Vallabh Bhawan Direction",
+          "description": "Government Secretariat Link",
+          "type": "exit"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-DEL-001",
+      "city": "Delhi",
+      "area": "ITO / Bahadur Shah Zafar Marg",
+      "road": "ITO Junction / Vikas Marg Corridor",
+      "latitude": 28.6289,
+      "longitude": 77.2405,
+      "source": "Delhi Traffic Police Integrated Traffic Management System",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "East Delhi Inflow across Yamuna Bridge",
+      "camera_type": "Multi-Sensor PTZ Highway Cam",
+      "last_updated": "2026-09-13T17:45:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "D1",
+          "name": "Vikas Marg Inflow",
+          "description": "Trans-Yamuna Corridor",
+          "type": "entry"
+        },
+        {
+          "id": "D2",
+          "name": "BSZ Marg South",
+          "description": "Connaught Place Approach",
+          "type": "exit"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-DEL-002",
+      "city": "Delhi",
+      "area": "Ansari Nagar",
+      "road": "AIIMS Flyover Junction / Ring Road",
+      "latitude": 28.5686,
+      "longitude": 77.209,
+      "source": "Delhi Traffic Police Emergency Corridor Monitoring",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Ring Road Underpass & Emergency Ambulance Way",
+      "camera_type": "AI Emergency Corridor Sensor",
+      "last_updated": "2026-09-13T17:30:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "AI1",
+          "name": "Emergency Priority Corridor",
+          "description": "Ambulance Priority Route",
+          "type": "emergency"
+        },
+        {
+          "id": "AI2",
+          "name": "Ring Road Main Carriageway",
+          "description": "Arterial Transit",
+          "type": "entry"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-MUM-001",
+      "city": "Mumbai",
+      "area": "Andheri East",
+      "road": "Western Express Highway (WEH) - Andheri Flyover",
+      "latitude": 19.1136,
+      "longitude": 72.8697,
+      "source": "Mumbai Traffic Police Operations Command Centre",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Southbound WEH Express Lanes towards Bandra",
+      "camera_type": "Highway Flow Radar-Vision Hybrid",
+      "last_updated": "2026-09-13T18:00:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "W1",
+          "name": "Southbound Expressway",
+          "description": "Airport to Bandra Express",
+          "type": "highway"
+        },
+        {
+          "id": "W2",
+          "name": "Andheri-Kurla Road Slip",
+          "description": "Metro Line 1 Underpass",
+          "type": "ramp"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-BLR-001",
+      "city": "Bengaluru",
+      "area": "BTM Layout / HSR Layout",
+      "road": "Central Silk Board Junction / Outer Ring Road",
+      "latitude": 12.9176,
+      "longitude": 77.6238,
+      "source": "Bengaluru Traffic Police TMC",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Hosur Road - Outer Ring Road Convergence",
+      "camera_type": "Bottleneck Analytics Camera",
+      "last_updated": "2026-09-13T18:15:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "SB1",
+          "name": "Hosur Road Inflow",
+          "description": "Electronic City Elevated Exit",
+          "type": "entry"
+        },
+        {
+          "id": "SB2",
+          "name": "ORR East to Bellandur",
+          "description": "Tech Corridor Inflow",
+          "type": "entry"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-PUN-001",
+      "city": "Pune",
+      "area": "Ganeshkhind",
+      "road": "Savitribai Phule Pune University Chowk",
+      "latitude": 18.5414,
+      "longitude": 73.8298,
+      "source": "Pune Smart City Development Corporation",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "University Circle & Baner Road Split",
+      "camera_type": "Smart Traffic Actuation Sensor",
+      "last_updated": "2026-09-13T16:00:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "PU1",
+          "name": "Baner Road Inflow",
+          "description": "West Pune Approach",
+          "type": "entry"
+        },
+        {
+          "id": "PU2",
+          "name": "Shivajinagar Inflow",
+          "description": "City Core Arterial",
+          "type": "entry"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-HYD-001",
+      "city": "Hyderabad",
+      "area": "Madhapur / HITEC City",
+      "road": "Cyber Towers Junction",
+      "latitude": 17.4504,
+      "longitude": 78.3808,
+      "source": "Cyberabad Police Traffic Command & Control",
+      "feed_status": "LOCATION ONLY",
+      "feed_availability": "CCTV LOCATION AVAILABLE - LIVE FEED NOT AVAILABLE",
+      "feed_url": null,
+      "authorized": false,
+      "data_source_label": "MUNICIPAL CCTV LOCATION",
+      "direction": "Cyber Gateway to Inorbit Mall Corridor",
+      "camera_type": "4K Smart Signal Sensor",
+      "last_updated": "2026-09-13T17:20:00+05:30",
+      "monitoring_zones": [
+        {
+          "id": "CT1",
+          "name": "Cyber Gateway Approach",
+          "description": "HITEC City Main Link",
+          "type": "entry"
+        },
+        {
+          "id": "CT2",
+          "name": "Kondapur Arterial",
+          "description": "Residential Feeder Route",
+          "type": "entry"
+        }
+      ]
+    },
+    {
+      "camera_id": "CAM-IND-TEST",
+      "name": "Test Camera",
+      "city": "Indore",
+      "area": "Urban Corridor",
+      "road": "AB Road",
+      "latitude": 22.7533,
+      "longitude": 75.8937,
+      "source": "Municipal Traffic Authority - Surveillance Mesh",
+      "feed_status": "ONLINE",
+      "status": "ONLINE",
+      "feed_availability": "LOCATION ONLY",
+      "feed_url": null,
+      "authorized": true,
+      "data_source_label": "MUNICIPAL TRAFFIC CAMERA",
+      "direction": "Multi-Directional",
+      "camera_type": "High-Definition 1080p Fixed Sensor",
+      "detection_model": "YOLOv8m + ByteTrack",
+      "monitoring_zones": {},
+      "last_updated": "2026-09-13T20:30:00+05:30"
+    }
+  ]
+}

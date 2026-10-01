@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Traffic Management System — Authority Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/dashboard.css">
+  <link rel="stylesheet" href="/static/css/leaflet.css">
+  <script src="/static/js/chart.min.js"></script>
+  <script src="/static/js/leaflet.js"></script>
+</head>
+<body class="dark-theme">
+
+  <!-- ========================================================= -->
+  <!-- 1. TOP HEADER & COMMAND BAR                               -->
+  <!-- ========================================================= -->
+  <header class="top-header">
+    <div class="header-brand">
+      <div class="brand-icon">
+        <span class="traffic-light-glyph">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+        </span>
+      </div>
+      <div class="brand-text">
+        <h1 class="system-title">SMART TRAFFIC MANAGEMENT</h1>
+        <div class="brand-sub">AI URBAN MOBILITY COMMAND & CONTROL CENTER</div>
+      </div>
+    </div>
+
+    <!-- Live Top Metric Chips -->
+    <div class="header-stat-chips">
+      <div class="stat-chip cyan" title="Total Active Monitored Vehicles">
+        <span>🚗</span> VEHICLES: <span class="stat-chip-val" id="chipVehicles">546</span>
+      </div>
+      <div class="stat-chip green" title="Operational Municipal CCTV Cameras">
+        <span>📹</span> CAMERAS: <span class="stat-chip-val" id="chipCameras">13 ONLINE</span>
+      </div>
+      <div class="stat-chip yellow" title="Zones Under Heavy or Severe Congestion">
+        <span>🚦</span> CONGESTED: <span class="stat-chip-val" id="chipCongestion">3 ZONES</span>
+      </div>
+      <div class="stat-chip red" title="Detected Infractions (Overspeeding, Red-light, etc.)">
+        <span>⚠</span> VIOLATIONS: <span class="stat-chip-val" id="chipViolations">17</span>
+      </div>
+      <div class="stat-chip red" title="High-Speed and Critical Incident Alerts">
+        <span>🚨</span> ALERTS: <span class="stat-chip-val" id="chipAlerts">8 ACTIVE</span>
+      </div>
+    </div>
+
+    <!-- Mode Switcher & System Status -->
+    <div class="header-meta">
+      <div class="mode-toggle-group">
+        <button class="btn-mode-toggle active" id="btnModeAuthority">
+          <span>🛡️</span> AUTHORITY
+        </button>
+        <button class="btn-mode-toggle" id="btnModeDriver">
+          <span>🚗</span> DRIVER
+        </button>
+      </div>
+
+      <!-- Data Source / Simulation Indicator (Phase 9) -->
+      <div class="simulation-indicator-badge live" id="simIndicatorBadge" title="Data Feed Provenance: LIVE (Camera) / SIMULATION (SUMO) / DEMO">
+        <span class="indicator-dot"></span>
+        <span class="indicator-text" id="simIndicatorText">LIVE FEED</span>
+      </div>
+
+      <div class="system-status-badge online" id="systemStatusBadge">
+        <span class="status-dot"></span>
+        <span class="status-text">ONLINE</span>
+      </div>
+
+      <div class="clock-display" id="clockDisplay">--:--:-- UTC</div>
+    </div>
+  </header>
+
+  <!-- ========================================================= -->
+  <!-- 2. CONTROL ROOM WRAPPER: SIDEBAR + MAIN AREA              -->
+  <!-- ========================================================= -->
+  <div class="control-room-wrapper">
+
+    <!-- LEFT NAVIGATION SIDEBAR -->
+    <aside class="control-sidebar">
+      <ul class="sidebar-nav-list">
+        <li class="sidebar-nav-item active" data-view="dashboard" id="navItemDashboard">
+          <div class="nav-item-left">
+            <span class="nav-icon">📊</span>
+            <span>Dashboard</span>
+          </div>
+          <span class="nav-badge cyan">Active</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="monitoring" id="navItemMonitoring">
+          <div class="nav-item-left">
+            <span class="nav-icon">📡</span>
+            <span>Live Monitoring</span>
+          </div>
+          <span class="nav-badge">Map</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="cameras" id="navItemCameras">
+          <div class="nav-item-left">
+            <span class="nav-icon">📹</span>
+            <span>CCTV Cameras</span>
+          </div>
+          <span class="nav-badge cyan" id="sbBadgeCameras">13</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="zones" id="navItemZones">
+          <div class="nav-item-left">
+            <span class="nav-icon">🔷</span>
+            <span>Traffic Zones</span>
+          </div>
+          <span class="nav-badge" id="sbBadgeZones">6</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="congestion" id="navItemCongestion">
+          <div class="nav-item-left">
+            <span class="nav-icon">📈</span>
+            <span>Congestion</span>
+          </div>
+          <span class="nav-badge warning">85.8</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="violations" id="navItemViolations">
+          <div class="nav-item-left">
+            <span class="nav-icon">⚖</span>
+            <span>Violations</span>
+          </div>
+          <span class="nav-badge alert" id="sbBadgeViolations">17</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="incidents" id="navItemIncidents">
+          <div class="nav-item-left">
+            <span class="nav-icon">🚨</span>
+            <span>Incidents</span>
+          </div>
+          <span class="nav-badge alert" id="sbBadgeIncidents">4</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="routes" id="navItemRoutes">
+          <div class="nav-item-left">
+            <span class="nav-icon">🛣</span>
+            <span>Routes</span>
+          </div>
+          <span class="nav-badge">Best</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="simulation" id="navItemSimulation">
+          <div class="nav-item-left">
+            <span class="nav-icon">🚦</span>
+            <span>Simulation</span>
+          </div>
+          <span class="nav-badge">SUMO</span>
+        </li>
+        <li class="sidebar-nav-item" data-view="reports" id="navItemReports">
+          <div class="nav-item-left">
+            <span class="nav-icon">📋</span>
+            <span>Reports</span>
+          </div>
+        </li>
+        <li class="sidebar-nav-item" data-view="settings" id="navItemSettings">
+          <div class="nav-item-left">
+            <span class="nav-icon">⚙</span>
+            <span>Speed Limits</span>
+          </div>
+        </li>
+      </ul>
+
+      <div class="sidebar-system-footer">
+        <div class="ssf-row">
+          <span>ENGINE:</span>
+          <span class="ssf-val">YOLOv8m + ByteTrack</span>
+        </div>
+        <div class="ssf-row">
+          <span>SIMULATOR:</span>
+          <span class="ssf-val">SUMO 1.27.1</span>
+        </div>
+        <div class="ssf-row">
+          <span>GEO-LAYER:</span>
+          <span class="ssf-val">Google Maps Platform</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTROL ROOM WORKSPACE -->
+    <main class="control-main-area">
+
+      <!-- TOP MAP SEARCH ROW (Search ANY Indian city, road, or junction) -->
+      <div class="gmp-search-row">
+        <div class="gmp-search-container" id="gmpSearchContainer">
+          <span class="gmp-search-icon">🔍</span>
+          <input type="text" id="gmpSearchInput" class="gmp-search-input" placeholder="Search any Indian city, road, junction (e.g. Vijay Nagar, MG Road, Bhopal, Delhi)..." autocomplete="off">
+          <button class="gmp-search-clear" id="btnGmpClear" title="Clear search">&times;</button>
+          <div class="gmp-autocomplete-list" id="gmpAutocompleteList"></div>
+        </div>
+
+        <div class="gmp-search-actions">
+          <button class="gmp-btn-action" id="btnCurrentLocation" title="Center on current location">
+            <span>📍</span> MY LOCATION
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Location Shortcuts -->
+      <div class="quick-junctions-bar">
+        <span class="quick-label">Fast Search Shortcuts:</span>
+        <div class="quick-pills-list">
+          <button class="quick-pill active" data-query="Vijay Nagar, Indore, Madhya Pradesh">Indore: Vijay Nagar</button>
+          <button class="quick-pill" data-query="Bhopal, Madhya Pradesh">Bhopal</button>
+          <button class="quick-pill" data-query="Bhopal Junction Railway Station">Bhopal Junction</button>
+          <button class="quick-pill" data-query="MG Road, Indore, Madhya Pradesh">Indore: MG Road</button>
+          <button class="quick-pill" data-query="ITO, New Delhi, Delhi">Delhi: ITO</button>
+          <button class="quick-pill" data-query="Central Silk Board, Bengaluru, Karnataka">Bengaluru: Silk Board</button>
+          <button class="quick-pill" data-query="Western Express Highway, Andheri, Mumbai, Maharashtra">Mumbai: Andheri (WEH)</button>
+        </div>
+      </div>
+
+      <!-- MAP ACTION COMMAND BAR -->
+      <div class="map-action-bar">
+        <button class="btn-map-action" id="btnToggleSelectLocation" title="Click anywhere on the map to inspect, drop cameras, or build zones">
+          <span>📍</span> Select Monitoring Location
+        </button>
+        <button class="btn-map-action" id="btnStartCreateZone" title="Draw and calibrate a new traffic monitoring zone polygon">
+          <span>🔷</span> Create Traffic Zone
+        </button>
+        <button class="btn-map-action" id="btnOpenAddCctvModal" title="Deploy a new CCTV camera node">
+          <span>📹</span> Add CCTV Camera
+        </button>
+        <button class="btn-map-action danger" id="btnOpenReportIncidentModal" title="Broadcast a traffic incident or road closure">
+          <span>🚨</span> Report Incident
+        </button>
+        <button class="btn-map-action" id="btnOpenFindRouteModal" title="Calculate optimal route and check severe congestion bottlenecks">
+          <span>🛣️</span> Find Best Route
+        </button>
+        <button class="btn-map-action" id="btnOpenSumoModal" title="Inspect Digital Twin SUMO Network and TraCI control">
+          <span>🚦</span> SUMO Simulation
+        </button>
+      </div>
+
+      <!-- DYNAMIC BANNER: LOCATION SELECTION ACTIVE (Shown on map click) -->
+      <div class="location-selection-banner" id="locSelectionBanner" style="display: none;">
+        <div class="lsb-info">
+          <span class="lsb-icon">🎯</span>
+          <div>
+            <div class="lsb-title" id="lsbPointTitle">Selected Point: Lat --, Lng --</div>
+            <div class="lsb-sub" id="lsbPointSub">Road: Resolving... &bull; Address: Resolving...</div>
+          </div>
+        </div>
+        <div class="lsb-actions">
+          <button class="btn-lsb primary" id="btnLsbAddCctv">
+            <span>📹</span> Add CCTV Here
+          </button>
+          <button class="btn-lsb" id="btnLsbCreateZone">
+            <span>🔷</span> Create Zone Here
+          </button>
+          <button class="btn-lsb" id="btnLsbMonitor">
+            <span>🎯</span> Monitor Here
+          </button>
+          <button class="btn-lsb cancel" id="btnLsbCancel">
+            ✕ Dismiss
+          </button>
+        </div>
+      </div>
+
+      <!-- DYNAMIC BANNER: ZONE POLYGON DRAWING ACTIVE -->
+      <div class="zone-drawing-banner" id="zoneDrawingBanner" style="display: none;">
+        <div>
+          <strong style="color:#f59e0b;">🔷 POLYGON DRAWING MODE ACTIVE:</strong>
+          <span style="color:#e2e8f0; font-size:0.76rem; margin-left:6px;" id="zdbInstructions">Click on Google Map to define polygon corners. Need at least 3 points.</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-lsb primary" id="btnZdbSave">✓ Complete &amp; Save Zone</button>
+          <button class="btn-lsb cancel" id="btnZdbClear">Clear Points</button>
+          <button class="btn-lsb cancel" id="btnZdbCancel">✕ Exit Drawing</button>
+        </div>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- 3. MAIN GEOSPATIAL WORKSPACE: MAP + RIGHT PANELS          -->
+      <!-- ========================================================= -->
+      <div class="li-workspace-grid" id="mapWorkspaceGrid">
+
+        <!-- GOOGLE MAP CONTAINER -->
+        <div class="li-map-container">
+
+          <!-- Map Toolbar -->
+          <div class="map-toolbar">
+            <div class="map-layer-options">
+              <span class="toolbar-label">View:</span>
+              <button class="layer-btn active" id="btnMapTypeRoadmap">Map</button>
+              <button class="layer-btn" id="btnMapTypeSatellite">Satellite</button>
+              <button class="layer-btn" id="btnMapTypeTerrain">Terrain</button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+            <div class="traffic-toggle-group">
+              <button class="traffic-toggle-btn active" id="btnToggleTraffic">
+                <span class="traffic-led on" id="trafficLed"></span>
+                <span class="traffic-btn-text" id="trafficBtnText">GOOGLE MAP TRAFFIC: ON</span>
+              </button>
+            </div>
+
+            <div class="toolbar-divider"></div>
+            <div class="cctv-filters-group">
+              <span class="toolbar-label">LAYERS:</span>
+              <label class="cctv-filter-checkbox">
+                <input type="checkbox" id="filterLiveCctv" checked>
+                <span class="cctv-chk-custom live"></span>
+                <span class="filter-txt">Cameras</span>
+              </label>
+              <label class="cctv-filter-checkbox">
+                <input type="checkbox" id="filterZonesLayer" checked>
+                <span class="cctv-chk-custom" style="background:#3b82f6;"></span>
+                <span class="filter-txt">Zones</span>
+              </label>
+              <label class="cctv-filter-checkbox">
+                <input type="checkbox" id="filterIncidentsLayer" checked>
+                <span class="cctv-chk-custom" style="background:#ef4444;"></span>
+                <span class="filter-txt">Incidents</span>
+              </label>
+            </div>
+
+            <div class="map-util-controls">
+              <button class="util-btn" id="btnZoomIn" title="Zoom In">+</button>
+              <button class="util-btn" id="btnZoomOut" title="Zoom Out">&minus;</button>
+              <button class="util-btn" id="btnFullscreen" title="Toggle Fullscreen">⛶</button>
+            </div>
+          </div>
+
+          <!-- Real Google Map Element -->
+          <div id="googleMap" class="real-google-map"></div>
+
+          <!-- Map Footer Legend -->
+          <div class="map-footer-legend">
+            <div class="legend-traffic-group">
+              <span class="legend-title">TRAFFIC LAYER:</span>
+              <span class="leg-item"><span class="leg-swatch green"></span> Flow</span>
+              <span class="leg-item"><span class="leg-swatch yellow"></span> Moderate</span>
+              <span class="leg-item"><span class="leg-swatch red"></span> Heavy</span>
+              <span class="leg-item"><span class="leg-swatch darkred"></span> Severe</span>
+            </div>
+            <div class="legend-cctv-group">
+              <span class="legend-title">ZONES:</span>
+              <span class="leg-item"><span class="leg-swatch green"></span> NORMAL</span>
+              <span class="leg-item"><span class="leg-swatch yellow"></span> BUSY</span>
+              <span class="leg-item"><span class="leg-swatch" style="background:#f97316;"></span> CONGESTED</span>
+              <span class="leg-item"><span class="leg-swatch red"></span> SEVERE</span>
+            </div>
+            <div class="legend-cctv-group">
+              <span class="legend-title">SENSORS:</span>
+              <span class="leg-item"><span class="cctv-dot-icon live"></span> LIVE FEED</span>
+              <span class="leg-item"><span class="cctv-dot-icon location-only"></span> MUNICIPAL LOCATION</span>
+              <span class="leg-item"><span class="cctv-dot-icon offline"></span> OFFLINE</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR PANELS -->
+        <div class="li-sidebar-panel">
+
+          <!-- 1. Selected Location Card -->
+          <div class="sidebar-card selected-location-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">📍</span>
+                <h3 class="card-title">SELECTED LOCATION</h3>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="data-mode-badge live" id="selLocationDataModeBadge">LIVE DATA</span>
+                <span class="monitoring-status-pill" id="selLocationStatusBadge">ACTIVE NODE</span>
+              </div>
+            </div>
+
+            <div class="loc-detail-main">
+              <div class="loc-name" id="selLocationName">Vijay Nagar Intersection</div>
+              <div class="loc-area" id="selFormattedAddress">AB Road &amp; Ring Road Crossing, Scheme 54, Indore, Madhya Pradesh, India</div>
+
+              <!-- Location Coverage Warning Banner (TRAFFIC DATA RULE) -->
+              <div class="loc-coverage-banner" id="locCoverageBanner" style="display:none;">
+                <span class="lcb-icon">⚠️</span>
+                <div class="lcb-content">
+                  <div class="lcb-title">LOCATION FOUND</div>
+                  <div class="lcb-subtitle">Traffic intelligence unavailable for this area.</div>
+                </div>
+              </div>
+
+              <div class="loc-coords-grid">
+                <div class="coord-col">
+                  <span class="coords-label">LATITUDE:</span>
+                  <span class="coords-val" id="selLat">22.7533° N</span>
+                </div>
+                <div class="coord-col">
+                  <span class="coords-label">LONGITUDE:</span>
+                  <span class="coords-val" id="selLng">75.8937° E</span>
+                </div>
+              </div>
+
+              <div class="road-geocode-box" id="roadGeocodeBox">
+                <span class="road-icon">🛣️</span>
+                <div class="road-text" id="roadGeocodeText">Road: AB Road &bull; Sublocality: Scheme 54 &bull; City: Indore</div>
+              </div>
+
+              <!-- Location Intelligence & Data Provenance Status Matrix -->
+              <div class="location-intelligence-grid" id="locationIntelligenceGrid">
+                <div class="li-stat-item">
+                  <span class="li-lbl">CCTV STATUS:</span>
+                  <span class="li-val" id="liCctvStatus">AVAILABLE (ONLINE)</span>
+                </div>
+                <div class="li-stat-item">
+                  <span class="li-lbl">CURRENT TRAFFIC:</span>
+                  <span class="li-val" id="liLiveTrafficStatus">AVAILABLE</span>
+                </div>
+                <div class="li-stat-item">
+                  <span class="li-lbl">PROJECT COVERAGE:</span>
+                  <span class="li-val" id="liCoverageStatus">ACTIVE (CAM-IND-001)</span>
+                </div>
+                <div class="li-stat-item">
+                  <span class="li-lbl">LOCATION STATUS:</span>
+                  <span class="li-val" id="liLocationStatus">MONITORED SURVEILLANCE NODE</span>
+                </div>
+                <div class="li-stat-item full-width">
+                  <span class="li-lbl">TYPICAL CHARACTER:</span>
+                  <span class="li-val" id="liTypicalCharacter">HIGH ACTIVITY / ARTERIAL (HISTORICAL &amp; LIVE SENSORS)</span>
+                </div>
+                <div class="li-stat-item full-width">
+                  <span class="li-lbl">DATA PROVENANCE:</span>
+                  <span class="li-val provenance-tag" id="liDataProvenanceTag">MEASURED / PREDICTED / DERIVED</span>
+                </div>
+              </div>
+
+              <!-- Provenance Breakdown Table (Explicit Transparent Indicators) -->
+              <div class="provenance-matrix-table" id="provenanceMatrixTable">
+                <div class="pm-row">
+                  <span class="pm-k">Map:</span> <span class="pm-v avail" id="pmMap">AVAILABLE</span>
+                  <span class="pm-k">Road Network:</span> <span class="pm-v avail" id="pmRoad">AVAILABLE</span>
+                </div>
+                <div class="pm-row">
+                  <span class="pm-k">Project CCTV:</span> <span class="pm-v avail" id="pmCctv">AVAILABLE</span>
+                  <span class="pm-k">Live Traffic:</span> <span class="pm-v avail" id="pmLiveTraffic">AVAILABLE</span>
+                </div>
+                <div class="pm-row">
+                  <span class="pm-k">Historical Data:</span> <span class="pm-v avail" id="pmHistorical">AVAILABLE</span>
+                  <span class="pm-k">Model Prediction:</span> <span class="pm-v avail" id="pmModel">AVAILABLE</span>
+                </div>
+                <div class="pm-row">
+                  <span class="pm-k">Simulation (SUMO):</span> <span class="pm-v avail" id="pmSim">AVAILABLE</span>
+                </div>
+              </div>
+
+              <div class="loc-unmonitored-notice" id="locUnmonitoredNotice" style="display:none;">
+                <span class="lun-icon">ℹ️</span>
+                <span class="lun-txt">No connected CCTV or project traffic sensor is currently available for this location. Road geometry and historical network data displayed without fabricated telemetry.</span>
+              </div>
+
+              <div style="display:flex; gap:8px; margin-top:8px;">
+                <button class="btn-monitor-location" id="btnMonitorThisLocation" style="flex:1;">
+                  <span class="btn-icon">🎯</span> MONITOR THIS JUNCTION
+                </button>
+                <button class="btn-monitor-location secondary" id="btnLocFindRoutes" style="flex:1;">
+                  <span class="btn-icon">🛣️</span> FIND ROUTES
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Selected CCTV Camera Detail & Monitoring Card -->
+          <div class="sidebar-card monitoring-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">📹</span>
+                <h3 class="card-title">CCTV SENSOR INSPECTION</h3>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span class="data-mode-badge live" id="camDetailDataModeBadge">LIVE DATA</span>
+                <span class="cam-id-tag" id="monSelectedCameraTag">CAM-IND-001</span>
+              </div>
+            </div>
+
+            <div class="monitoring-body">
+              <div class="mon-stat-row">
+                <div class="mon-stat-item">
+                  <span class="ms-label">Camera Name:</span>
+                  <span class="ms-val" id="camDetailName">Vijay Nagar Core Surveillance</span>
+                </div>
+                <div class="mon-stat-item">
+                  <span class="ms-label">Status:</span>
+                  <span class="ms-val green" id="camDetailStatus">🟢 ONLINE (LIVE FEED)</span>
+                </div>
+              </div>
+
+              <!-- Vehicle Class Breakdown for Camera -->
+              <div class="chc-metrics-grid" style="margin: 10px 0;">
+                <div class="chc-metric-item">
+                  <span class="chc-m-label">CARS:</span>
+                  <span class="chc-m-val" id="camDetailCars">160</span>
+                </div>
+                <div class="chc-metric-item">
+                  <span class="chc-m-label">BIKES:</span>
+                  <span class="chc-m-val" id="camDetailBikes">299</span>
+                </div>
+                <div class="chc-metric-item">
+                  <span class="chc-m-label">BUSES:</span>
+                  <span class="chc-m-val" id="camDetailBuses">31</span>
+                </div>
+                <div class="chc-metric-item">
+                  <span class="chc-m-label">TRUCKS:</span>
+                  <span class="chc-m-val" id="camDetailTrucks">56</span>
+                </div>
+                <div class="chc-metric-item">
+                  <span class="chc-m-label">AVG SPEED:</span>
+                  <span class="chc-m-val" id="camDetailAvgSpeed">28.5 km/h</span>
+                </div>
+                <div class="chc-metric-item">
+                  <span class="chc-m-label">VIOLATIONS:</span>
+                  <span class="chc-m-val" style="color:#f87171;" id="camDetailVios">8</span>
+                </div>
+              </div>
+
+              <!-- Feed Status Callout -->
+              <div class="feed-status-callout live" id="monFeedStatusBox">
+                <div class="callout-header">
+                  <span class="callout-dot live" id="monCalloutDot"></span>
+                  <span class="callout-title" id="monFeedTitle">LIVE FEED AVAILABLE</span>
+                </div>
+                <div class="callout-desc" id="monFeedDesc">
+                  Authorized municipal node. YOLOv8m + ByteTrack pipeline operational with 1530 precomputed frames.
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="monitoring-actions">
+                <button class="btn-action-primary" id="btnOpenMonCamera">
+                  <span class="btn-icon">⚡</span>
+                  <span class="btn-text" id="btnOpenMonCameraText">OPEN CAMERA &amp; RUN COMPUTER VISION</span>
+                </button>
+
+                <div class="secondary-actions-row">
+                  <button class="btn-action-secondary" id="btnOpenZoneModal" title="Calibrate and adjust monitoring approaches">
+                    <span>📐</span> ROAD ZONES
+                  </button>
+                  <button class="btn-action-secondary" id="btnOpenHistoryModal" title="View historical analysis records">
+                    <span>📜</span> LOCATION HISTORY
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Real-Time Hybrid Model Traffic Intelligence Card -->
+          <div class="hybrid-intel-hero-card" id="hybridModelHeroCard">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">🧠</span>
+                <div>
+                  <h3 class="card-title" style="font-size:0.88rem;">HYBRID AI INTELLIGENCE</h3>
+                  <div style="font-size:0.68rem; color:#94a3b8;">TCN-Transformer Gated Fusion &bull; 10 Multi-Task Heads</div>
+                </div>
+              </div>
+              <span class="monitoring-status-pill" id="hybridStatusPill" style="background:rgba(99,102,241,0.2); border-color:#818cf8; color:#a5b4fc;">ONLINE (READY)</span>
+            </div>
+
+            <div style="margin-top:10px;">
+              <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#94a3b8; margin-bottom:4px;">
+                <span>Sequence Buffer Progress:</span>
+                <strong id="hybridBufferStatusText" style="color:#38bdf8;">20 / 20 Frames (100% Ready)</strong>
+              </div>
+              <div class="zone-progress-track" style="height:6px; background:#1e293b; border-radius:3px;">
+                <div class="zone-progress-fill" id="hybridBufferFill" style="width:100%; background:#6366f1;"></div>
+              </div>
+            </div>
+
+            <div class="chc-metrics-grid" style="margin-top:12px;">
+              <div class="chc-metric-item">
+                <span class="chc-m-label">MODEL CONFIDENCE</span>
+                <span class="chc-m-val" id="hybridMeanConf" style="color:#34d399;">91.5%</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">READY PREDICTIONS</span>
+                <span class="chc-m-val" id="hybridReadyCount">7 Tracks</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">BUFFER WARMING</span>
+                <span class="chc-m-val" id="hybridWarmupCount" style="color:#f59e0b;">19 Tracks</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">SYSTEM FUSED SCORE</span>
+                <span class="chc-m-val" id="hybridSystemScore" style="color:#38bdf8;">17.9 / 100</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">HIGH RISK TRACKS</span>
+                <span class="chc-m-val" id="hybridHighRiskCount" style="color:#f87171;">2 Active</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">APPROACH THREATS</span>
+                <span class="chc-m-val" id="hybridThreatCount" style="color:#fbbf24;">2 Flagged</span>
+              </div>
+            </div>
+
+            <!-- Active Safety Advisory -->
+            <div id="hybridSafetyAdvisoryBox" style="background:#090d16; border:1px solid #1e293b; border-left:3px solid #f59e0b; padding:8px 10px; border-radius:4px; margin-top:10px; font-size:0.72rem; color:#e2e8f0;">
+              <strong style="color:#f59e0b;">SAFETY ADVISORY:</strong> <span id="hybridSafetyAdvisoryText">Elevated approach velocity detected on North approach. Actuation balanced.</span>
+            </div>
+          </div>
+
+          <!-- 4. Three-Way Congestion Engine Card (Strict Measured vs. Predicted vs. Derived) -->
+          <div class="congestion-hero-card" id="threeWayCongestionSection">
+            <div class="chc-header">
+              <div>
+                <span class="chc-title">CONGESTION MATRIX (3-WAY SEPARATION)</span>
+                <div style="font-size:0.65rem; color:#64748b; font-family:var(--font-mono);">MEASURED &bull; MODEL PREDICTED &bull; DERIVED</div>
+              </div>
+              <span class="monitoring-status-pill" id="chcZoneIdTag">ZONE 1</span>
+            </div>
+
+            <div class="congestion-score-display" style="margin-top:10px;">
+              <span class="cs-number" id="chcScoreNum">85.8</span>
+              <span class="cs-badge" id="chcLevelBadge">SEVERE</span>
+            </div>
+
+            <!-- Explicit Three-Way Metric Columns -->
+            <div class="three-way-metric-grid">
+              <!-- Column A: Measured (Ground Truth) -->
+              <div class="three-way-col">
+                <div class="tw-col-header">
+                  <span class="tw-col-title">EMPIRICAL</span>
+                  <span class="tw-col-tag measured">MEASURED</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Vehicles:</span>
+                  <span class="tw-stat-val" id="twmVehicleCount">18</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Density:</span>
+                  <span class="tw-stat-val" id="twmDensity">9.0</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Avg Speed:</span>
+                  <span class="tw-stat-val" id="twmSpeed">28.5 km/h</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Trend:</span>
+                  <span class="tw-stat-val" id="twmTrend">STABLE</span>
+                </div>
+              </div>
+
+              <!-- Column B: Model Predicted (TCN-Transformer Gated Hybrid) -->
+              <div class="three-way-col">
+                <div class="tw-col-header">
+                  <span class="tw-col-title">HYBRID AI</span>
+                  <span class="tw-col-tag predicted">PREDICTED</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Congestion:</span>
+                  <span class="tw-stat-val" id="twpCongestionScore" style="color:#c084fc;">77.5 / 100</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Risk Level:</span>
+                  <span class="tw-stat-val" id="twpRiskLevel" style="color:#f87171;">HIGH</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Confidence:</span>
+                  <span class="tw-stat-val" id="twpConfidence">92.0%</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Approaching:</span>
+                  <span class="tw-stat-val" id="twpApproaching">2 Veh</span>
+                </div>
+              </div>
+
+              <!-- Column C: Derived (Fused Intelligence) -->
+              <div class="three-way-col">
+                <div class="tw-col-header">
+                  <span class="tw-col-title">DECISION</span>
+                  <span class="tw-col-tag derived">DERIVED</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Fused Score:</span>
+                  <span class="tw-stat-val" id="twdFusedScore" style="color:#fbbf24;">32.8 / 100</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Fused Level:</span>
+                  <span class="tw-stat-val" id="twdFusedLevel">MODERATE</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Safety Status:</span>
+                  <span class="tw-stat-val" id="twdSafetyStatus">ADVISORY</span>
+                </div>
+                <div class="tw-stat-row">
+                  <span>Actuation:</span>
+                  <span class="tw-stat-val" id="twdActuation" style="font-size:0.65rem; color:#38bdf8;">Extend +15s</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Legacy Breakdown Retained for Backward Compatibility -->
+            <div class="chc-metrics-grid" style="margin-top:10px;">
+              <div class="chc-metric-item">
+                <span class="chc-m-label">Total Monitored</span>
+                <span class="chc-m-val" id="chcTotalVehicles">546</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">Peak Interval</span>
+                <span class="chc-m-val" id="chcPeakVehicles">148</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">Average Interval</span>
+                <span class="chc-m-val" id="chcAvgInterval">103.67</span>
+              </div>
+              <div class="chc-metric-item">
+                <span class="chc-m-label">Flow Score</span>
+                <span class="chc-m-val" id="chcFlow">98.67</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Authority Traffic Policy Recommendations Card -->
+          <div class="sidebar-card policy-recommendations-card" id="policyRecommendationsCard">
+            <div class="card-header">
+              <div class="card-title-group">
+                <span class="card-icon">📋</span>
+                <div>
+                  <h3 class="card-title" style="font-size:0.85rem;">TRAFFIC POLICY RECOMMENDATIONS</h3>
+                  <div style="font-size:0.65rem; color:#94a3b8;">Decision Support Engine &bull; Condition-Action Rules</div>
+                </div>
+              </div>
+              <span class="policy-status-pill recommendation" id="policyStatusBadge">RECOMMENDATION ONLY — NOT REAL-ROAD ACTUATION</span>
+            </div>
+
+            <div class="policy-card-body">
+              <div class="policy-condition-row">
+                <span class="pol-lbl">CONDITION:</span>
+                <span class="pol-val" id="policyConditionText">SEVERE CONGESTION (Score: 85.8) ON ZONE 1 APPROACH</span>
+              </div>
+              <div class="policy-rec-row">
+                <span class="pol-lbl">RECOMMENDATION:</span>
+                <span class="pol-val highlight" id="policyRecText">Reroute northbound traffic via Eastern Bypass / MR-10; activate priority green phase extension (+15s)</span>
+              </div>
+              <div class="policy-reason-row">
+                <span class="pol-lbl">REASON:</span>
+                <span class="pol-val" id="policyReasonText">Approach volume exceeds corridor exit capacity; TCN-Transformer predicts sustained queue.</span>
+              </div>
+              <div class="policy-meta-row">
+                <div class="pm-meta-item">
+                  <span class="pm-lbl">DATA SOURCE:</span>
+                  <span class="pm-tag" id="policyDataSourceTag">MEASURED / PREDICTED / DERIVED</span>
+                </div>
+                <div class="pm-meta-item">
+                  <span class="pm-lbl">STATUS:</span>
+                  <span class="pm-tag-status">RECOMMENDATION ONLY</span>
+                </div>
+              </div>
+              <div class="policy-sim-actuation" id="policySimActuationBox">
+                <span class="psa-badge">SIMULATED CONTROL ACTION</span>
+                <span class="psa-text" id="policySimActuationText">Adaptive signal split extension validated in SUMO Digital Twin (+15s green phase).</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- FLOATING ALERTS DRAWER (Bottom Right) -->
+      <div class="alerts-drawer collapsed" id="alertsDrawer">
+        <div class="alerts-drawer-header" id="alertsDrawerHeader">
+          <div class="adh-title">
+            <span>🚨</span>
+            <span>REAL-TIME TRAFFIC ALERTS (<span id="alertsCountTag">8</span>)</span>
+          </div>
+          <button class="adh-toggle-btn" id="btnToggleAlertsDrawer">▲ Expand</button>
+        </div>
+        <div class="alerts-drawer-list" id="alertsDrawerList">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- 4. COMPUTER VISION ANALYSIS & VIDEO PANEL                 -->
+      <!-- ========================================================= -->
+      <section class="cv-video-section" id="videoContainer">
+        <!-- Target Context Banner -->
+        <div class="cv-context-banner">
+          <div class="cv-target-info">
+            <span class="radar-ping"></span>
+            <span class="cv-location-label" id="cvTargetLocation">AB Road &amp; Ring Road Crossing, Indore</span>
+            <span class="cv-cam-label" id="cvTargetCam">CAMERA: CAM-IND-001</span>
+          </div>
+          <div class="cv-status-badges">
+            <span class="cv-badge model">YOLOv8m + ByteTrack</span>
+            <span class="cv-badge rate" id="cvFrameRate">30 FPS Ground Truth</span>
+            <span class="cv-badge source" id="cvSourceTag">ISCDL SURVEILLANCE FEED</span>
+          </div>
+        </div>
+
+        <div class="video-canvas-wrapper">
+          <video id="trafficVideo" src="/video/traffic2.mp4" preload="auto" playsinline muted></video>
+          <canvas id="cvCanvas"></canvas>
+
+          <!-- Top-Left Video HUD -->
+          <div class="video-hud">
+            <div class="hud-item">
+              <span class="hud-label">TIME</span>
+              <span class="hud-value" id="hudTime">00:00.00</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">FRAME</span>
+              <span class="hud-value" id="hudFrame">0 / 1530</span>
+            </div>
+            <div class="hud-item">
+              <span class="hud-label">PRIORITY ZONE</span>
+              <span class="hud-value highlight" id="hudPriorityTag">ELECTING...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrubber & Playback Controls -->
+        <div class="playback-controls-bar">
+          <div class="scrubber-container">
+            <input type="range" id="videoScrubber" min="0" max="1529" value="0" step="1">
+            <div class="scrubber-progress" id="scrubberFill"></div>
+          </div>
+
+          <div class="controls-row">
+            <div class="controls-left">
+              <button class="ctrl-btn-action play-btn" id="btnExplicitPlay" title="Start Traffic Replay">▶ PLAY</button>
+              <button class="ctrl-btn-action pause-btn" id="btnExplicitPause" title="Pause Traffic Replay">❚❚ PAUSE</button>
+              <button class="ctrl-btn-action restart-btn" id="btnExplicitRestart" title="Restart Traffic Replay">↺ RESTART</button>
+              <button class="ctrl-btn" id="btnPlayPause" title="Toggle Play/Pause" style="display:none;">
+                <span id="playPauseIcon">▶</span>
+              </button>
+              <button class="ctrl-btn" id="btnStepBack" title="Step -1 Frame">&#9664;&#9664;</button>
+              <button class="ctrl-btn" id="btnStepForward" title="Step +1 Frame">&#9654;&#9654;</button>
+              <button class="ctrl-btn" id="btnRestart" title="Restart Video" style="display:none;">&#8635;</button>
+
+              <div class="replay-time-display-box">
+                <span class="rtd-lbl">VIDEO / REPLAY TIME:</span>
+                <span class="rtd-val" id="replayTimeDisplay">00:00 / 00:51</span>
+              </div>
+
+              <div class="speed-selector">
+                <button class="speed-btn active" data-speed="1">1x</button>
+                <button class="speed-btn" data-speed="2">2x</button>
+                <button class="speed-btn" data-speed="4">4x</button>
+              </div>
+            </div>
+
+            <div class="controls-right">
+              <div class="layer-toggles">
+                <label class="toggle-checkbox">
+                  <input type="checkbox" id="toggleBBoxes" checked>
+                  <span class="checkmark"></span>
+                  BBoxes
+                </label>
+                <label class="toggle-checkbox">
+                  <input type="checkbox" id="toggleTrackIds" checked>
+                  <span class="checkmark"></span>
+                  IDs &amp; Classes
+                </label>
+                <label class="toggle-checkbox">
+                  <input type="checkbox" id="toggleHybridRisk" checked>
+                  <span class="checkmark"></span>
+                  Hybrid Risk
+                </label>
+                <label class="toggle-checkbox">
+                  <input type="checkbox" id="toggleViolations" checked>
+                  <span class="checkmark"></span>
+                  Violations
+                </label>
+                <label class="toggle-checkbox">
+                  <input type="checkbox" id="toggleZones" checked>
+                  <span class="checkmark"></span>
+                  Zone Polygons
+                </label>
+                <label class="toggle-checkbox">
+                  <input type="checkbox" id="toggleContactPoints" checked>
+                  <span class="checkmark"></span>
+                  Contact Points
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- 5. ZONE TELEMETRY CARDS & DECISION ENGINE                 -->
+      <!-- ========================================================= -->
+      <section class="zones-and-decision-section">
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <span class="panel-icon">🔷</span>
+            <h2 class="panel-title">MONITORED INTERSECTION APPROACH ZONES</h2>
+          </div>
+          <div class="panel-tag">6 Calibrated Polygons</div>
+        </div>
+
+        <div class="zone-cards-grid" id="zoneCardsGrid">
+          <!-- Populated dynamically via JS -->
+        </div>
+
+        <!-- Decision Engine & Signal Actuation Panel -->
+        <div class="decision-panel-card">
+          <div class="decision-header">
+            <div class="d-title-group">
+              <span class="d-icon">⚡</span>
+              <div>
+                <h3 class="d-title">DETERMINISTIC TRAFFIC DECISION ENGINE</h3>
+                <div class="d-sub">Multi-Zone Volume &bull; Rolling Trend &bull; Actuation Recommendation</div>
+              </div>
+            </div>
+            <div class="priority-election-badge" id="decisionLevelBadge">HIGH TRAFFIC</div>
+          </div>
+
+          <div class="decision-content-grid">
+            <div class="decision-col">
+              <div class="decision-stat-title" id="decisionZoneTitle">ZONE 1: Main Approach Corridor</div>
+              <p class="decision-stat-desc" id="decisionZoneDesc">Inflow Corridor from North Approach</p>
+
+              <div class="decision-metrics-row">
+                <div class="dm-item">
+                  <span class="dm-label">Average:</span>
+                  <span class="dm-val" id="decisionAvg">0.0</span>
+                </div>
+                <div class="dm-item">
+                  <span class="dm-label">Peak:</span>
+                  <span class="dm-val" id="decisionPeak">0</span>
+                </div>
+                <div class="dm-item">
+                  <span class="dm-label">Trend:</span>
+                  <span class="dm-val" id="decisionTrend">STABLE</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="decision-col action-col">
+              <div class="action-label">ACTUATION ADVISORY:</div>
+              <div class="action-highlight" id="decisionAction">Standard Cycle Split</div>
+              <div class="action-reason" id="decisionReason">Evaluating multi-zone inflow metrics...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- 5B. SELECTED ZONE & LANE-LEVEL ANALYSIS INSPECTOR         -->
+      <!-- ========================================================= -->
+      <section class="zone-inspector-section" id="zoneInspectorSection">
+        <div class="zi-header">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="panel-icon">🔬</span>
+              <h2 class="panel-title" style="font-size:1.05rem;">ZONE &amp; LANE TRAFFIC INTELLIGENCE INSPECTOR</h2>
+            </div>
+            <div class="panel-sub" style="font-size:0.75rem; color:#94a3b8; margin-top:2px;">
+              Interactive deep-dive into zone approach kinetics, lane allocation, model predictions, and active infractions.
+            </div>
+          </div>
+          <div class="zi-zone-selector-pills">
+            <button class="zi-pill active" data-zone="ZONE 1">ZONE 1</button>
+            <button class="zi-pill" data-zone="ZONE 2">ZONE 2</button>
+            <button class="zi-pill" data-zone="ZONE 3">ZONE 3</button>
+            <button class="zi-pill" data-zone="ZONE 4">ZONE 4</button>
+            <button class="zi-pill" data-zone="ZONE 5">ZONE 5</button>
+            <button class="zi-pill" data-zone="ZONE 6">ZONE 6</button>
+          </div>
+        </div>
+
+        <div style="background:#090d16; border:1px solid #1e293b; border-radius:6px; padding:14px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="zone-tag z1" id="ziSelectedZoneTag">ZONE 1</span>
+              <strong style="color:#fff; font-size:0.92rem;" id="ziSelectedZoneTitle">Main Approach Corridor</strong>
+            </div>
+            <div style="font-size:0.75rem; color:#94a3b8; margin-top:4px;" id="ziSelectedZoneDesc">
+              Inflow Corridor from North Approach &bull; Assigned Lane: <span id="ziAssignedLane" style="color:#38bdf8; font-family:var(--font-mono);">LANE_NORTH_INFLOW</span>
+            </div>
+          </div>
+          <div style="display:flex; gap:10px; align-items:center;">
+            <div style="text-align:right;">
+              <div style="font-size:0.65rem; color:#64748b; font-family:var(--font-mono);">FUSED STATUS</div>
+              <span class="cs-badge busy" id="ziSafetyBadge">ADVISORY</span>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.65rem; color:#64748b; font-family:var(--font-mono);">FUSED SCORE</div>
+              <span style="font-size:1.25rem; font-weight:900; font-family:var(--font-mono); color:#fbbf24;" id="ziFusedScore">32.8</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3-Way Metrics for Selected Zone -->
+        <div class="three-way-metric-grid">
+          <!-- Empirical Measured Values -->
+          <div class="three-way-col">
+            <div class="tw-col-header">
+              <span class="tw-col-title">EMPIRICAL SENSORS</span>
+              <span class="tw-col-tag measured">MEASURED</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Total Vehicles in Zone:</span>
+              <span class="tw-stat-val" id="zivTotalVehicles">18</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Density Score:</span>
+              <span class="tw-stat-val" id="zivDensity">9.0</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Average Speed:</span>
+              <span class="tw-stat-val" id="zivSpeed">28.5 km/h</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Queue Sustained Time:</span>
+              <span class="tw-stat-val" id="zivSustained">1.7s</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Modal Breakdown:</span>
+              <span class="tw-stat-val" id="zivModalSplit" style="font-size:0.68rem; color:#38bdf8;">8 Cars, 6 Bikes, 3 Trk, 1 Bus</span>
+            </div>
+          </div>
+
+          <!-- Model Predicted Inferences -->
+          <div class="three-way-col">
+            <div class="tw-col-header">
+              <span class="tw-col-title">TCN-TRANSFORMER GATED HYBRID</span>
+              <span class="tw-col-tag predicted">PREDICTED</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Predicted Congestion:</span>
+              <span class="tw-stat-val" id="zipCongestion" style="color:#c084fc;">77.5 / 100</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Model Confidence:</span>
+              <span class="tw-stat-val" id="zipConfidence">92.0%</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Approaching Threat Score:</span>
+              <span class="tw-stat-val" id="zipThreat" style="color:#f59e0b;">55.3</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Approaching Vehicles:</span>
+              <span class="tw-stat-val" id="zipApproachingCount">2 Detected</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Fleet Risk Distribution:</span>
+              <span class="tw-stat-val" id="zipRiskSplit" style="font-size:0.68rem; color:#f87171;">2 High, 0 Warn, 2 Safe</span>
+            </div>
+          </div>
+
+          <!-- Derived Actuation & Control -->
+          <div class="three-way-col">
+            <div class="tw-col-header">
+              <span class="tw-col-title">INTELLIGENT DECISION</span>
+              <span class="tw-col-tag derived">DERIVED</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Deterministic Base:</span>
+              <span class="tw-stat-val" id="zidBaseScore">28.8</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Model Predicted Base:</span>
+              <span class="tw-stat-val" id="zidModelScore">77.5</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Fused Congestion Score:</span>
+              <span class="tw-stat-val" id="zidFusedScore" style="color:#fbbf24;">32.8 / 100</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Safety Status:</span>
+              <span class="tw-stat-val" id="zidSafetyStatus" style="color:#38bdf8;">ADVISORY</span>
+            </div>
+            <div class="tw-stat-row">
+              <span>Recommended Actuation:</span>
+              <span class="tw-stat-val" id="zidAction" style="font-size:0.68rem; color:#34d399;">Elevated velocity advisory</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lane-Level Telemetry Callout -->
+        <div style="background:#090d16; border:1px solid #1e293b; border-radius:6px; padding:12px; margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+          <div>
+            <span style="font-size:0.68rem; color:#64748b; font-family:var(--font-mono); text-transform:uppercase;">Monitored Lane Corridor</span>
+            <div style="font-size:0.85rem; font-weight:700; color:#fff;" id="ziLaneCorridorTitle">LANE_NORTH_INFLOW &bull; North Main Carriageway</div>
+          </div>
+          <div style="display:flex; gap:14px; font-family:var(--font-mono); font-size:0.75rem;">
+            <div>Vehicles: <strong id="ziLaneVehCount" style="color:#38bdf8;">18</strong></div>
+            <div>Approaching: <strong id="ziLaneAppCount" style="color:#f59e0b;">2</strong></div>
+            <div>High Risk: <strong id="ziLaneRiskCount" style="color:#f87171;">2</strong></div>
+            <div>Infractions: <strong id="ziLaneInfractionCount" style="color:#34d399;">0</strong></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- 5C. REAL-TIME TRAFFIC EVENT & ALERT TIMELINE              -->
+      <!-- ========================================================= -->
+      <section class="event-timeline-section" id="eventTimelineSection">
+        <div class="panel-header" style="margin-bottom:14px;">
+          <div class="panel-title-group">
+            <span class="panel-icon">⏱️</span>
+            <div>
+              <h2 class="panel-title" style="font-size:1.05rem;">REAL-TIME TRAFFIC EVENT &amp; ALERT TIMELINE</h2>
+              <div class="panel-sub" style="font-size:0.75rem; color:#94a3b8;">
+                Synchronized chronological feed of detected infractions, severe bottlenecks, road incidents, and model alerts.
+              </div>
+            </div>
+          </div>
+          <div class="panel-tag" id="timelineActiveCountTag">11 Events Monitored</div>
+          <button class="btn-tc-action" id="btnRefreshTimeline" style="margin-left:8px; font-size:0.7rem; padding:4px 10px; cursor:pointer;" title="Refresh real-time events feed">🔄 Refresh</button>
+        </div>
+
+        <div class="timeline-grid" id="timelineCardsList">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- 6. ANALYTICS & CHARTS SECTION                             -->
+      <!-- ========================================================= -->
+      <section class="analytics-charts-section">
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header">
+              <h4 class="chart-title">Zone Inflow Volumes</h4>
+              <span class="chart-tag">Average vs. Peak</span>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="chartZoneVolumes"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h4 class="chart-title">Modal Fleet Composition</h4>
+              <span class="chart-tag">Detections</span>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="chartModalSplit"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h4 class="chart-title">Flow Dynamics</h4>
+              <span class="chart-tag">10s Intervals</span>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="chartFlowTimeline"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <h4 class="chart-title">Zone Stress &amp; Congestion Radar</h4>
+              <span class="chart-tag">Analysis Profile</span>
+            </div>
+            <div class="chart-canvas-wrapper">
+              <canvas id="chartCongestionRadar"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODALS                                                    -->
+  <!-- ========================================================= -->
+
+  <!-- 1. MODAL: ADD CCTV CAMERA -->
+  <div class="control-modal-backdrop" id="addCctvModal">
+    <div class="control-modal-card">
+      <div class="cmc-header">
+        <div class="cmc-title">
+          <span>📹</span> Deploy Municipal CCTV Sensor
+        </div>
+        <button class="modal-close-btn" id="btnCloseAddCctvModal">&times;</button>
+      </div>
+      <div class="cmc-body">
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Camera ID</label>
+            <input type="text" class="form-input" id="cctvFormId" placeholder="CAM-IND-014">
+          </div>
+          <div class="form-field">
+            <label>Camera Name</label>
+            <input type="text" class="form-input" id="cctvFormName" placeholder="e.g. Ring Road West Overlook">
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Latitude</label>
+            <input type="number" step="0.0001" class="form-input" id="cctvFormLat" value="22.7533">
+          </div>
+          <div class="form-field">
+            <label>Longitude</label>
+            <input type="number" step="0.0001" class="form-input" id="cctvFormLng" value="75.8937">
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Road Name</label>
+            <input type="text" class="form-input" id="cctvFormRoad" placeholder="AB Road Corridor">
+          </div>
+          <div class="form-field">
+            <label>City</label>
+            <input type="text" class="form-input" id="cctvFormCity" value="Indore">
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Camera Direction</label>
+            <input type="text" class="form-input" id="cctvFormDir" placeholder="North-East Inflow View">
+          </div>
+          <div class="form-field">
+            <label>Camera Status</label>
+            <select class="form-select" id="cctvFormStatus">
+              <option value="ONLINE">🟢 ONLINE</option>
+              <option value="WARNING">🟡 WARNING</option>
+              <option value="OFFLINE">🔴 OFFLINE</option>
+              <option value="LIVE">⚡ LIVE PROTOTYPE FEED</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Camera Type</label>
+            <input type="text" class="form-input" id="cctvFormType" value="High-Definition 1080p Fixed Sensor">
+          </div>
+          <div class="form-field">
+            <label>Detection Model</label>
+            <input type="text" class="form-input" id="cctvFormModel" value="YOLOv8m + ByteTrack">
+          </div>
+        </div>
+      </div>
+      <div class="cmc-footer">
+        <button class="btn-lsb cancel" id="btnCancelAddCctv">Cancel</button>
+        <button class="btn-lsb primary" id="btnSaveAddCctv">Save &amp; Place on Map</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MODAL: CREATE TRAFFIC ZONE -->
+  <div class="control-modal-backdrop" id="createZoneModal">
+    <div class="control-modal-card">
+      <div class="cmc-header">
+        <div class="cmc-title">
+          <span>🔷</span> Configure Traffic Monitoring Zone
+        </div>
+        <button class="modal-close-btn" id="btnCloseCreateZoneModal">&times;</button>
+      </div>
+      <div class="cmc-body">
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Zone ID</label>
+            <input type="text" class="form-input" id="zoneFormId" placeholder="ZONE_7">
+          </div>
+          <div class="form-field">
+            <label>Zone Name</label>
+            <input type="text" class="form-input" id="zoneFormName" placeholder="e.g. Bypass Inflow Ramp">
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Zone Congestion Type</label>
+            <select class="form-select" id="zoneFormType">
+              <option value="NORMAL">NORMAL (Green)</option>
+              <option value="BUSY">BUSY (Yellow)</option>
+              <option value="CONGESTED">CONGESTED (Orange)</option>
+              <option value="SEVERE">SEVERE (Red)</option>
+              <option value="INCIDENT">INCIDENT / ACCIDENT</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Speed Threshold (km/h)</label>
+            <input type="number" class="form-input" id="zoneFormSpeed" value="35">
+          </div>
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Severity Alert Threshold</label>
+            <select class="form-select" id="zoneFormSeverity">
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH" selected>HIGH</option>
+              <option value="CRITICAL">CRITICAL</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Road / Corridor</label>
+            <input type="text" class="form-input" id="zoneFormRoad" placeholder="AB Road Corridor">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Boundary Vertices Count</label>
+          <input type="text" class="form-input" id="zoneFormCoordsCount" readonly value="4 coordinates selected">
+        </div>
+      </div>
+      <div class="cmc-footer">
+        <button class="btn-lsb cancel" id="btnCancelCreateZone">Cancel</button>
+        <button class="btn-lsb primary" id="btnSaveCreateZone">Save Zone &amp; Draw on Map</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MODAL: REPORT INCIDENT -->
+  <div class="control-modal-backdrop" id="reportIncidentModal">
+    <div class="control-modal-card">
+      <div class="cmc-header">
+        <div class="cmc-title">
+          <span>🚨</span> Broadcast Traffic Incident / Hazard
+        </div>
+        <button class="modal-close-btn" id="btnCloseIncidentModal">&times;</button>
+      </div>
+      <div class="cmc-body">
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Incident Type</label>
+            <select class="form-select" id="incFormType">
+              <option value="ACCIDENT">ACCIDENT</option>
+              <option value="ROAD BLOCK">ROAD BLOCK</option>
+              <option value="BREAKDOWN">VEHICLE BREAKDOWN</option>
+              <option value="WATERLOGGING">WATERLOGGING</option>
+              <option value="CONSTRUCTION">CONSTRUCTION</option>
+              <option value="FIRE">FIRE HAZARD</option>
+              <option value="OTHER">OTHER</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Severity Level</label>
+            <select class="form-select" id="incFormSeverity">
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH" selected>HIGH</option>
+              <option value="CRITICAL">CRITICAL</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Incident Headline</label>
+          <input type="text" class="form-input" id="incFormTitle" placeholder="e.g. Collision blocking right-hand approach lane">
+        </div>
+
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Road / Corridor</label>
+            <input type="text" class="form-input" id="incFormRoad" placeholder="AB Road Corridor">
+          </div>
+          <div class="form-field">
+            <label>City</label>
+            <input type="text" class="form-input" id="incFormCity" value="Indore">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label>Detailed Description</label>
+          <textarea class="form-textarea" rows="3" id="incFormDesc" placeholder="Describe the obstruction, lane blockages, and traffic diversions enacted..."></textarea>
+        </div>
+      </div>
+      <div class="cmc-footer">
+        <button class="btn-lsb cancel" id="btnCancelIncident">Cancel</button>
+        <button class="btn-lsb primary" id="btnSaveIncident" style="background:#ef4444;">Publish Incident on Map</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MODAL: FIND BEST ROUTE & CONGESTION AVOIDANCE -->
+  <div class="control-modal-backdrop" id="findRouteModal">
+    <div class="control-modal-card">
+      <div class="cmc-header">
+        <div class="cmc-title">
+          <span>🛣️</span> Intelligent Traffic Routing &amp; Congestion Avoidance
+        </div>
+        <button class="modal-close-btn" id="btnCloseRouteModal">&times;</button>
+      </div>
+      <div class="cmc-body">
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Start Origin</label>
+            <input type="text" class="form-input" id="routeStartInput" placeholder="e.g. Palasia Square, Indore" value="Palasia Square, Indore">
+          </div>
+          <div class="form-field">
+            <label>Destination</label>
+            <input type="text" class="form-input" id="routeDestInput" placeholder="e.g. Vijay Nagar, Indore" value="Vijay Nagar, Indore">
+          </div>
+        </div>
+
+        <button class="btn-lsb primary" id="btnCalculateBestRoute" style="width:100%; justify-content:center; padding:10px;">
+          <span>⚡</span> Calculate Optimal Route
+        </button>
+
+        <div id="routeEvaluationResults" style="display:none; margin-top:10px;">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </div>
+      <div class="cmc-footer">
+        <button class="btn-lsb cancel" id="btnCloseRouteModalBtn">Close Routing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. MODAL: TRAFFIC VIOLATIONS TABLE -->
+  <div class="control-modal-backdrop" id="violationsModal">
+    <div class="control-modal-card" style="max-width: 900px;">
+      <div class="cmc-header">
+        <div class="cmc-title">
+          <span>⚖</span> Traffic Violations Registry
+        </div>
+        <button class="modal-close-btn" id="btnCloseViolationsModal">&times;</button>
+      </div>
+      <div class="cmc-body">
+        <div style="overflow-x:auto;">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Vehicle</th>
+                <th>Speed</th>
+                <th>Allowed</th>
+                <th>Location</th>
+                <th>Severity</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="violationsTableBody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="cmc-footer">
+        <button class="btn-lsb cancel" id="btnCloseViolationsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. MODAL: SUMO DIGITAL TWIN SIMULATION -->
+  <div class="control-modal-backdrop" id="simulationModal">
+    <div class="control-modal-card" style="max-width: 750px;">
+      <div class="cmc-header">
+        <div class="cmc-title">
+          <span>🚦</span> SUMO 1.27.1 Digital Twin Simulation
+        </div>
+        <button class="modal-close-btn" id="btnCloseSimModal">&times;</button>
+      </div>
+      <div class="cmc-body">
+        <div class="chc-metrics-grid" style="margin-bottom: 14px;">
+          <div class="chc-metric-item">
+            <span class="chc-m-label">SIM STATUS:</span>
+            <span class="chc-m-val" id="simStatusVal" style="color:#f59e0b;">LOADING...</span>
+          </div>
+          <div class="chc-metric-item">
+            <span class="chc-m-label">SIM TIME:</span>
+            <span class="chc-m-val" id="simTimeVal">0.0s</span>
+          </div>
+          <div class="chc-metric-item">
+            <span class="chc-m-label">ACTIVE VEHICLES:</span>
+            <span class="chc-m-val" id="simVehiclesVal">42</span>
+          </div>
+          <div class="chc-metric-item">
+            <span class="chc-m-label">AVG SPEED:</span>
+            <span class="chc-m-val" id="simSpeedVal">31.4 km/h</span>
+          </div>
+          <div class="chc-metric-item">
+            <span class="chc-m-label">CONGESTION IDX:</span>
+            <span class="chc-m-val" id="simCongestionVal">0.68</span>
+          </div>
+          <div class="chc-metric-item">
+            <span class="chc-m-label">NETWORK EDGES:</span>
+            <span class="chc-m-val" id="simEdgesVal">4 Arms</span>
+          </div>
+        </div>
+
+        <div id="simDiagnosticsBox" style="background:#090d16; border:1px solid #1e293b; padding:12px; border-radius:6px; font-size:0.75rem; color:#94a3b8; line-height:1.4;">
+          Connecting to simulation engine...
+        </div>
+
+        <div style="display:flex; gap:10px; margin-top:14px; justify-content:center;">
+          <button class="btn-lsb primary" id="btnSimStart">▶ Start Simulation</button>
+          <button class="btn-lsb" id="btnSimPause">❚❚ Pause</button>
+          <button class="btn-lsb" id="btnSimStep">Step +1</button>
+          <button class="btn-lsb cancel" id="btnSimReset">↺ Reset</button>
+        </div>
+      </div>
+      <div class="cmc-footer">
+        <button class="btn-lsb cancel" id="btnCloseSimModalBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. MODAL: SPEED LIMITS SETTINGS -->
+  <div class="control-modal-backdrop" id="speedLimitsModal">
+    <div class="control-modal-card">
+      <div class="cmc-header">
+        <div class="cmc-title">
+          <span>⚙</span> Configurable Road &amp; Zone Speed Limits
+        </div>
+        <button class="modal-close-btn" id="btnCloseSpeedLimitsModal">&times;</button>
+      </div>
+      <div class="cmc-body">
+        <div class="form-group-row">
+          <div class="form-field">
+            <label>Road Corridor</label>
+            <select class="form-select" id="slRoadSelect">
+              <option value="AB Road & Ring Road Crossing">AB Road &amp; Ring Road Crossing (Indore)</option>
+              <option value="Palasia Square / AB Road Corridor">Palasia Square / AB Road Corridor (Indore)</option>
+              <option value="Bhopal Junction Main Approach">Bhopal Junction Main Approach (Bhopal)</option>
+              <option value="Connaught Place Radial Corridor">Connaught Place Radial Corridor (Delhi)</option>
+              <option value="Silk Board Junction Inflow">Silk Board Junction Inflow (Bengaluru)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>Allowed Speed (km/h)</label>
+            <input type="number" class="form-input" id="slAllowedSpeedInput" value="50">
+          </div>
+        </div>
+
+        <button class="btn-lsb primary" id="btnSaveSpeedLimit" style="width:100%; justify-content:center; padding:10px; margin-top:8px;">
+          Save Speed Limit
+        </button>
+
+        <span id="slFeedback" style="font-size:0.75rem; color:#34d399; margin-top:6px; display:block; text-align:center;"></span>
+      </div>
+      <div class="cmc-footer">
+        <button class="btn-lsb cancel" id="btnCloseSpeedLimitsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. MODAL: ROAD ZONES CALIBRATION (Existing Preserved) -->
+  <div class="modal-backdrop" id="zoneModalBackdrop" style="display: none;">
+    <div class="modal-dialog zone-modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📐</span>
+          <div>
+            <h3 class="modal-title">CALIBRATE ROAD ZONES</h3>
+            <div class="modal-sub">Map Intersection Approaches &bull; Adjust Direction &bull; Assign Phase Groups</div>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btnCloseZoneModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="zm-table-container">
+          <table class="zm-table">
+            <thead>
+              <tr>
+                <th>Zone ID</th>
+                <th>Approach / Road Name</th>
+                <th>Traffic Direction</th>
+                <th>Phase Assignment</th>
+                <th>Sensitivity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="zone-tag z1">ZONE 1</span></td>
+                <td><input type="text" class="styled-input zm-input" value="Main Approach Corridor" id="zmName1"></td>
+                <td><input type="text" class="styled-input zm-input" value="Inflow North" id="zmDir1"></td>
+                <td>
+                  <select class="styled-select zm-select" id="zmPhase1">
+                    <option value="Phase 1" selected>Phase 1 (Main Extension)</option>
+                    <option value="Phase 2">Phase 2 (Cross Traffic)</option>
+                    <option value="Phase 3">Phase 3 (Turn Priority)</option>
+                  </select>
+                </td>
+                <td><span class="sens-badge">High (1.0x)</span></td>
+              </tr>
+              <tr>
+                <td><span class="zone-tag z2">ZONE 2</span></td>
+                <td><input type="text" class="styled-input zm-input" value="Eastbound Exit / Turning Lane" id="zmName2"></td>
+                <td><input type="text" class="styled-input zm-input" value="Outflow East" id="zmDir2"></td>
+                <td>
+                  <select class="styled-select zm-select" id="zmPhase2">
+                    <option value="Phase 1">Phase 1 (Main Extension)</option>
+                    <option value="Phase 2" selected>Phase 2 (Cross Traffic)</option>
+                    <option value="Phase 3">Phase 3 (Turn Priority)</option>
+                  </select>
+                </td>
+                <td><span class="sens-badge">Standard (0.8x)</span></td>
+              </tr>
+              <tr>
+                <td><span class="zone-tag z3">ZONE 3</span></td>
+                <td><input type="text" class="styled-input zm-input" value="Northbound Core Crossing" id="zmName3"></td>
+                <td><input type="text" class="styled-input zm-input" value="Inflow South to North" id="zmDir3"></td>
+                <td>
+                  <select class="styled-select zm-select" id="zmPhase3">
+                    <option value="Phase 1" selected>Phase 1 (Main Extension)</option>
+                    <option value="Phase 2">Phase 2 (Cross Traffic)</option>
+                    <option value="Phase 3">Phase 3 (Turn Priority)</option>
+                  </select>
+                </td>
+                <td><span class="sens-badge">High (1.0x)</span></td>
+              </tr>
+              <tr>
+                <td><span class="zone-tag z4">ZONE 4</span></td>
+                <td><input type="text" class="styled-input zm-input" value="Southbound Inflow Queue" id="zmName4"></td>
+                <td><input type="text" class="styled-input zm-input" value="Queue South" id="zmDir4"></td>
+                <td>
+                  <select class="styled-select zm-select" id="zmPhase4">
+                    <option value="Phase 1">Phase 1 (Main Extension)</option>
+                    <option value="Phase 2">Phase 2 (Cross Traffic)</option>
+                    <option value="Phase 3" selected>Phase 3 (Turn Priority)</option>
+                  </select>
+                </td>
+                <td><span class="sens-badge">Standard (0.8x)</span></td>
+              </tr>
+              <tr>
+                <td><span class="zone-tag z5">ZONE 5</span></td>
+                <td><input type="text" class="styled-input zm-input" value="Westbound Left Approach" id="zmName5"></td>
+                <td><input type="text" class="styled-input zm-input" value="Inflow West" id="zmDir5"></td>
+                <td>
+                  <select class="styled-select zm-select" id="zmPhase5">
+                    <option value="Phase 1">Phase 1 (Main Extension)</option>
+                    <option value="Phase 2">Phase 2 (Cross Traffic)</option>
+                    <option value="Phase 3" selected>Phase 3 (Turn Priority)</option>
+                  </select>
+                </td>
+                <td><span class="sens-badge">Standard (0.8x)</span></td>
+              </tr>
+              <tr>
+                <td><span class="zone-tag z6">ZONE 6</span></td>
+                <td><input type="text" class="styled-input zm-input" value="Southeast Exit Link" id="zmName6"></td>
+                <td><input type="text" class="styled-input zm-input" value="Outflow SE" id="zmDir6"></td>
+                <td>
+                  <select class="styled-select zm-select" id="zmPhase6">
+                    <option value="Phase 1">Phase 1 (Main Extension)</option>
+                    <option value="Phase 2" selected>Phase 2 (Cross Traffic)</option>
+                    <option value="Phase 3">Phase 3 (Turn Priority)</option>
+                  </select>
+                </td>
+                <td><span class="sens-badge">Low (0.6x)</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <span class="save-feedback" id="zmSaveFeedback"></span>
+        <button class="btn-modal-cancel" id="btnCancelZoneModal">Cancel</button>
+        <button class="btn-modal-save" id="btnSaveZoneModal">Save Calibration Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. MODAL: LOCATION HISTORY & AUDIT LOG (Existing Preserved) -->
+  <div class="modal-backdrop" id="historyModalBackdrop" style="display: none;">
+    <div class="modal-dialog history-modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📜</span>
+          <div>
+            <h3 class="modal-title">LOCATION TRAFFIC HISTORY &amp; ACTUATION LOG</h3>
+            <div class="modal-sub" id="hmLocationSubtitle">Historical Intelligence Archive &bull; Ground Truth Analysis</div>
+          </div>
+        </div>
+        <button class="modal-close-btn" id="btnCloseHistoryModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="history-table-container">
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Location / Junction</th>
+                <th>Vehicles</th>
+                <th>Congestion Level</th>
+                <th>Trend</th>
+                <th>Dominant Fleet</th>
+                <th>Actuation Advisory</th>
+                <th>Data Source</th>
+              </tr>
+            </thead>
+            <tbody id="hmHistoryTbody">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" id="btnCloseHistoryModalBtn">Close Archive</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- 10. DRIVER MODE COCKPIT HUD VIEW (SHARED BACKEND)         -->
+  <!-- ========================================================= -->
+  <div class="driver-mode-hud-view" id="driverModeView">
+    <!-- Top Cockpit Bar -->
+    <div class="dm-top-bar">
+      <div class="dm-top-left">
+        <span class="dm-logo-icon">🚗</span>
+        <div>
+          <div class="dm-brand-title">DRIVER TRAFFIC INTELLIGENCE</div>
+          <div class="dm-brand-sub">Real-Time Situational Awareness &bull; Smart Corridors &bull; TCN-Transformer Guidance</div>
+        </div>
+        <div class="dm-header-badges">
+          <span class="dm-status-badge gps-ready" id="dmGpsStatus">📍 GPS: READY</span>
+          <span class="dm-status-badge live" id="dmDataProvenance">🟢 LIVE INTELLIGENCE</span>
+          <span class="dm-road-tag" id="dmCurrentRoad">AB Road Corridor</span>
+        </div>
+      </div>
+
+      <div class="dm-top-right">
+        <!-- Compact Speed & Limit Display -->
+        <div class="dm-speed-strip">
+          <div class="dm-compact-gauge">
+            <span class="dm-speed-number" id="dmEgoSpeed">42</span>
+            <span class="dm-speed-unit">KM/H</span>
+          </div>
+          <div class="dm-limit-sign" id="dmSpeedLimitSign">50</div>
+        </div>
+
+        <button class="btn-dm-action" id="btnDmLocateMe" title="Request GPS Position">
+          <span>🛰️</span> Locate Me
+        </button>
+        <button class="btn-lsb primary" id="btnExitDriverMode">
+          <span>🛡️</span> Authority Mode
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Navigation & Map Split View -->
+    <div class="dm-cockpit-layout">
+      <!-- Left: Actual Road Map View -->
+      <div class="dm-map-container">
+        <div id="driverMap" class="driver-map-canvas"></div>
+
+        <!-- Floating Turn / Corridor Guidance Banner -->
+        <div class="dm-turn-banner" id="dmTurnBanner">
+          <span class="dm-turn-icon" id="dmTurnIcon">⬆️</span>
+          <div class="dm-turn-info">
+            <div class="dm-turn-instruction" id="dmTurnInstruction">Follow AB Road Corridor Northbound</div>
+            <div class="dm-turn-sub" id="dmTurnSub">Green wave progression active &bull; Next intersection in 450m</div>
+          </div>
+        </div>
+
+        <!-- Floating Recenter Button -->
+        <button class="btn-dm-recenter" id="btnDmRecenterMap" title="Re-center map on vehicle">
+          <span>🎯</span>
+        </button>
+
+        <!-- Offline / State Notice Banner -->
+        <div class="dm-map-state-notice" id="dmMapStateNotice" style="display:none;"></div>
+
+        <!-- Map Legend -->
+        <div class="dm-map-legend">
+          <span class="dm-leg-item"><span class="dm-leg-dot normal"></span> Normal Flow</span>
+          <span class="dm-leg-item"><span class="dm-leg-dot congested"></span> Congested</span>
+          <span class="dm-leg-item"><span class="dm-leg-dot severe"></span> Severe Queue</span>
+          <span class="dm-leg-item"><span class="dm-leg-dot incident"></span> Road Hazard</span>
+        </div>
+      </div>
+
+      <!-- Right: Navigation, Route Evaluation & Proximity Alerts Sidebar -->
+      <div class="dm-sidebar-panel">
+        <!-- 1. Destination & Route Planner -->
+        <div class="dm-panel-card">
+          <div class="dm-card-header">
+            <h3 class="dm-card-title">TRAFFIC-AWARE ROUTING</h3>
+            <span class="dm-pill-badge" id="dmRouteBadge">NO ACTIVE ROUTE</span>
+          </div>
+          <div class="dm-nav-inputs">
+            <div class="dm-input-row">
+              <span class="dm-input-icon origin">🟢</span>
+              <input type="text" class="dm-input-field" id="dmOriginInput" placeholder="Enter origin (e.g. Vijay Nagar, Indore)..." value="Vijay Nagar, Indore" />
+              <div id="dmOriginText" style="display:none;">Vijay Nagar, Indore</div>
+            </div>
+            <div class="dm-input-row">
+              <span class="dm-input-icon dest">🏁</span>
+              <input type="text" class="dm-input-field" id="dmDestInput" placeholder="Enter destination in Indore..." value="Palasia Square, Indore" />
+            </div>
+
+            <!-- Quick Presets -->
+            <div class="dm-preset-chips" id="dmPresetChips">
+              <button class="dm-chip active" data-dest="Palasia Square, Indore" data-lat="22.7244" data-lng="75.8839">Palasia</button>
+              <button class="dm-chip" data-dest="Radisson Square, Indore" data-lat="22.7441" data-lng="75.9042">Radisson</button>
+              <button class="dm-chip" data-dest="MR-10 Junction, Indore" data-lat="22.7667" data-lng="75.8950">MR-10</button>
+              <button class="dm-chip" data-dest="Bhawarkua Square, Indore" data-lat="22.6926" data-lng="75.8676">Bhawarkua</button>
+              <button class="dm-chip" data-dest="Bengali Square, Indore" data-lat="22.7150" data-lng="75.9080">Bengali Sq</button>
+              <button class="dm-chip" data-dest="Indore Airport, Indore" data-lat="22.7250" data-lng="75.8050">Airport</button>
+            </div>
+
+            <div class="dm-actions-grid">
+              <button class="btn-dm-primary" id="btnDmCalculateRoute">
+                <span>🛣️</span> Calculate Optimal Route
+              </button>
+              <button class="btn-dm-ghost" id="btnDmClearRoute" title="Clear current route">
+                <span>✕</span> Clear
+              </button>
+              <button class="btn-dm-ghost" id="btnDmRecalcRoute" title="Re-evaluate route against latest traffic">
+                <span>🔄</span>
+              </button>
+            </div>
+
+            <div class="dm-calc-status" id="dmCalcStatus" style="display:none; font-size:0.78rem; font-weight:700; padding:6px 10px; border-radius:4px; margin-top:8px; text-align:center;"></div>
+
+            <!-- Route Metrics Matrix -->
+            <div class="dm-metrics-strip" id="dmRouteMetricsStrip" style="display:none;">
+              <div class="dm-m-box">
+                <span class="dm-m-lbl">EST. TRAVEL TIME</span>
+                <span class="dm-m-val highlight" id="dmRouteEta">-- mins</span>
+              </div>
+              <div class="dm-m-box">
+                <span class="dm-m-lbl">DISTANCE</span>
+                <span class="dm-m-val" id="dmRouteDistance">-- km</span>
+              </div>
+              <div class="dm-m-box">
+                <span class="dm-m-lbl">MAX CONGESTION</span>
+                <span class="dm-m-val" id="dmRouteCongestion">--</span>
+              </div>
+            </div>
+
+            <div class="dm-route-status-note" id="dmRouteStatusTag" style="display:none;">
+              Recommended route according to current traffic conditions
+            </div>
+
+            <!-- DUAL ROUTE CHOICES: SHORTEST ROUTE vs TRAFFIC-AWARE BEST ROUTE -->
+            <div class="dm-route-options-container" id="dmRouteOptionsContainer" style="display:none; margin-top:12px;">
+              <div class="dm-ro-header">
+                <span class="dm-ro-title">ROUTE CHOICES &amp; COMPARISON</span>
+                <div class="dm-ro-view-toggles">
+                  <button type="button" class="dm-ro-toggle active" id="btnShowTrafficAwareRoute">Traffic-Aware</button>
+                  <button type="button" class="dm-ro-toggle" id="btnShowShortestRoute">Shortest</button>
+                  <button type="button" class="dm-ro-toggle" id="btnCompareBothRoutes">Compare Both</button>
+                </div>
+              </div>
+
+              <!-- Route Choice 1: Shortest Route -->
+              <div class="dm-route-card" id="cardShortestRoute">
+                <div class="dm-rc-header">
+                  <div class="dm-rc-title-group">
+                    <span class="dm-rc-badge shortest">SHORTEST ROUTE</span>
+                    <span class="dm-rc-sub">Minimum Total Road Distance</span>
+                  </div>
+                  <button type="button" class="btn-select-route" id="btnUseShortestRoute">Use Shortest</button>
+                </div>
+                <div class="dm-rc-metrics">
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">DISTANCE:</span>
+                    <strong id="dmShortestDist">5.2 km</strong>
+                  </div>
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">EST. TIME:</span>
+                    <strong id="dmShortestTime">21 mins</strong>
+                  </div>
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">CONGESTION:</span>
+                    <span class="dm-rc-tag high" id="dmShortestCong">HIGH (85.8)</span>
+                  </div>
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">OPTIMIZATION:</span>
+                    <span class="dm-rc-tag no" id="dmShortestOpt">NO (Distance Only)</span>
+                  </div>
+                </div>
+                <div class="dm-rc-policy" id="dmShortestPolicy">
+                  <strong>Policy Impact:</strong> Corridor passes through central bottleneck queue.
+                </div>
+              </div>
+
+              <!-- Route Choice 2: Traffic-Aware Best Route -->
+              <div class="dm-route-card selected" id="cardTrafficAwareRoute">
+                <div class="dm-rc-header">
+                  <div class="dm-rc-title-group">
+                    <span class="dm-rc-badge aware">TRAFFIC-AWARE BEST ROUTE</span>
+                    <span class="dm-rc-sub">Optimized for traffic-aware cost (travel time + congestion)</span>
+                  </div>
+                  <button type="button" class="btn-select-route active" id="btnUseAwareRoute">Selected</button>
+                </div>
+                <div class="dm-rc-metrics">
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">DISTANCE:</span>
+                    <strong id="dmAwareDist">-- km</strong>
+                  </div>
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">EST. TIME:</span>
+                    <strong id="dmAwareTime" style="color:#10b981;">-- mins</strong>
+                  </div>
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">CONGESTION:</span>
+                    <span class="dm-rc-tag low" id="dmAwareCong">OPTIMAL</span>
+                  </div>
+                  <div class="dm-rc-m-item">
+                    <span class="dm-rc-m-lbl">OPTIMIZATION:</span>
+                    <span class="dm-rc-tag yes" id="dmAwareOpt">YES (Traffic-Aware)</span>
+                  </div>
+                </div>
+                <div class="dm-rc-reason" id="dmAwareReason">
+                  <strong>Reason:</strong> Optimized for lowest traffic exposure and travel time cost.
+                </div>
+                <div class="dm-rc-policy" id="dmAwarePolicy">
+                  <strong>Policy Impact:</strong> Corridor aligned with Authority traffic diversion recommendation.
+                </div>
+              </div>
+
+              <div class="dm-rc-recommendation-box" id="dmRecommendationBox" style="background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.25); border-radius: 6px; padding: 10px; margin-top: 10px;">
+                <div style="font-size: 0.72rem; font-weight: 700; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;">RECOMMENDATION</div>
+                <div id="dmRouteRecommendationText" style="font-size: 0.76rem; color: #e2e8f0; line-height: 1.4;">
+                  Traffic-aware route selected based on traffic-aware cost optimization.
+                </div>
+              </div>
+
+              <!-- Route Data Coverage & Provenance Note -->
+              <div class="dm-rc-coverage-note" id="dmRouteCoverageNote">
+                <span class="dm-rc-cov-icon">ℹ️</span>
+                <span id="dmRouteCoverageText">Route corridor traffic coverage verified upon calculation.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Severe Bottleneck & Reroute Guidance -->
+        <div class="dm-warning-banner" id="dmSevereBanner" style="display:none;">
+          <span style="font-size:1.6rem;">⚠️</span>
+          <div style="flex:1;">
+            <strong style="color:#ef4444; font-size:0.82rem; display:block;">BOTTLENECK ADVISORY AHEAD:</strong>
+            <span style="color:#f1f5f9; font-size:0.75rem; display:block; margin-top:2px;" id="dmBottleneckText">Vijay Nagar Core Approach Corridor (Score: 85.8). High vehicle queue.</span>
+            <button class="btn-lsb primary" style="margin-top:8px; padding:6px 12px; font-size:0.72rem;" id="btnDmAcceptReroute">
+              <span>🛣️</span> Divert via Eastern Bypass (Save 12m)
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Nearby Road Hazards & Model Risk Alerts -->
+        <div class="dm-panel-card" style="flex:1;">
+          <div class="dm-card-header">
+            <h3 class="dm-card-title">NEARBY INCIDENTS &amp; HAZARDS</h3>
+            <span class="dm-pill-badge warning" id="dmHazardsCount">0 ACTIVE</span>
+          </div>
+          <div id="dmHazardsList" class="dm-hazards-list">
+            <!-- Dynamically populated via JS -->
+            <div class="dm-empty-state">Scanning nearby corridors for incidents...</div>
+          </div>
+        </div>
+
+        <!-- 4. Corridor Intelligence Summary -->
+        <div class="dm-corridor-summary">
+          <div class="dm-cs-row">
+            <span>SURVEILLANCE CORRIDOR:</span>
+            <strong id="dmCorridorName">VIJAY NAGAR ITMS</strong>
+          </div>
+          <div class="dm-cs-row">
+            <span>MODEL SAFETY STATUS:</span>
+            <strong style="color:#10b981;" id="dmModelSafetyStatus">NOMINAL SPLIT</strong>
+          </div>
+          <div class="dm-cs-row">
+            <span>SPEED ADVISORY:</span>
+            <span id="dmSpeedAdvisory">Maintain 40-50 km/h for green wave</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bottom-footer">
+    <div class="footer-left">
+      <span>SMART TRAFFIC MANAGEMENT SYSTEM &bull; AUTHORITY COMMAND CENTER v2.0</span>
+      <span class="footer-sep">&bull;</span>
+      <span>YOLOv8m + ByteTrack Computer Vision Stack</span>
+      <span class="footer-sep">&bull;</span>
+      <span>Eclipse SUMO 1.27.1 Digital Twin</span>
+    </div>
+    <div class="footer-right">
+      <span class="scientific-guardrail-tag">Scientific Constraint: Verified Telemetry &bull; Zero Fabricated Feeds</span>
+    </div>
+  </footer>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "@googlemaps/js-api-loader": "/static/js/js-api-loader.js"
+    }
+  }
+  </script>
+  <!-- Main JavaScript App (Single Loading Approach via @googlemaps/js-api-loader) -->
+  <script type="module" src="/static/js/dashboard.js"></script>
+</body>
+</html>

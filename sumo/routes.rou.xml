@@ -1,0 +1,44 @@
+<routes>
+
+    <vType id="car"
+           accel="2.6"
+           decel="4.5"
+           sigma="0.5"
+           length="5"
+           minGap="2.5"
+           maxSpeed="13.9"/>
+
+    <route id="route_1" edges="A0A1 A1B1"/>
+    <route id="route_2" edges="A1B1 B1B0"/>
+    <route id="route_3" edges="B0B1 B1A1"/>
+    <route id="route_4" edges="B1B0 B0A0"/>
+
+    <flow id="traffic_1"
+          type="car"
+          route="route_1"
+          begin="0"
+          end="600"
+          vehsPerHour="300"/>
+
+    <flow id="traffic_2"
+          type="car"
+          route="route_2"
+          begin="0"
+          end="600"
+          vehsPerHour="250"/>
+
+    <flow id="traffic_3"
+          type="car"
+          route="route_3"
+          begin="0"
+          end="600"
+          vehsPerHour="300"/>
+
+    <flow id="traffic_4"
+          type="car"
+          route="route_4"
+          begin="0"
+          end="600"
+          vehsPerHour="250"/>
+
+</routes>
