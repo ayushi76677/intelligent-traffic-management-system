@@ -76,3 +76,6 @@ node_modules/
 *.csv
 *.pkl
 *.pickle
+
+# Test-only artifact
+checkpoints/test_scaler.joblib
