@@ -79,3 +79,5 @@ node_modules/
 
 # Test-only artifact
 checkpoints/test_scaler.joblib
+
+!traffic2.mp4
